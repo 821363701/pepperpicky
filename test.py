@@ -56,7 +56,7 @@ def _search_in_group_topics(list, judge=None, _info=None):
             # webbrowser.open(hot_url.replace('m.', ''))
             continue
 
-        if len(info.contents) > 6:
+        if info and len(info.contents) > 6:
             if info.contents[6].find(u'上海') > -1:
                 if _info:
                     _info(u'{} {} {} {}'.format(hot_url, u'上海', title, founder_url))
