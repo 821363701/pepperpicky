@@ -41,8 +41,10 @@ def _search_in_group_topics(list, judge=None, _info=None):
         # /people/89241363/groups?session=c4338de0_27729491
         # /people/89241363/about?session=0f95d97c_27729491
         founder_url = founder.attrs[0][1].replace('groups', 'about')
-        # print founder_url
-        # print founder.text
+        if judge:
+            if judge(founder_url, type=1):
+                print 'founder not sh'
+                continue
 
         rrr = requests.get('http://m.douban.com'+founder_url, cookies=cookies)
         soup = BeautifulSoup(rrr.text)
@@ -65,17 +67,10 @@ def _search_in_group_topics(list, judge=None, _info=None):
                 if _info:
                     _info(u'{} {} {} {}'.format(hot_url, u'南京', title, founder_url))
                 print u'{} - {} - {}'.format(u'南京', hot_url.replace('m.', ''), title)
-            elif info.contents[6].find(u'东营') > -1:
-                if _info:
-                    _info(u'{} {} {} {}'.format(hot_url, u'东营', title, founder_url))
-                print u'{} - {} - {}'.format(u'东营', hot_url.replace('m.', ''), title)
-            elif info.contents[6].find(u'六安') > -1:
-                if _info:
-                    _info(u'{} {} {} {}'.format(hot_url, u'六安', title, founder_url))
-                print u'{} - {} - {}'.format(u'六安', hot_url.replace('m.', ''), title)
             else:
                 # not shanghai
-                pass
+                if _info:
+                    _info(founder_url, out=True)
                 print info.contents[6]
         else:
             # no location
@@ -118,31 +113,45 @@ def get_from_group(gid):
 def watch_latest(get_list):
     visited = set()
     _info = set()
+    _not_shanghai = set()
 
     try:
         with open('visited', 'r') as fp:
-                for l in fp:
-                    visited.add(l[:-1])
+            for l in fp:
+                visited.add(l[:-1])
     except:
         print 'no visited file'
 
     try:
         with open('info', 'r') as fp:
-                for l in fp:
-                    _info.add(l[:-1])
+            for l in fp:
+                _info.add(l[:-1])
     except:
         print 'no info file'
 
-    def judge(u):
-        uu = str(u.split('?')[0])
-        if uu not in visited:
-            visited.add(uu)
-            return False
-        else:
-            return True
+    try:
+        with open('notsh', 'r') as fp:
+            for l in fp:
+                _not_shanghai.add(l[:-1])
+    except:
+        print 'no _not_shanghai file'
 
-    def info(l):
-        _info.add(l)
+    def judge(u, type=0):
+        if type == 0:
+            uu = str(u.split('?')[0])
+            if uu not in visited:
+                visited.add(uu)
+                return False
+            else:
+                return True
+        elif type == 1:
+            return u in _not_shanghai
+
+    def info(l, out=False):
+        if out:
+            _not_shanghai.add(l)
+        else:
+            _info.add(l)
 
     while True:
         list = get_list()
@@ -164,8 +173,14 @@ def watch_latest(get_list):
                 fp.write('\n')
         fp.close()
 
-        time.sleep(30)
-        print str(len(visited))+'-----------------------------------------------------------'+datetime.now().strftime('%Y%m%d %H:%M:%S')
+        fp = open('notsh', 'w')
+        for l in _not_shanghai:
+            fp.write(l+'\n')
+        fp.close()
+
+
+        time.sleep(10)
+        print '-----------------------------------------------------------'+datetime.now().strftime('%Y%m%d %H:%M:%S')
 
 if __name__ == '__main__':
     # get_from_group('294565')
