@@ -5,8 +5,10 @@ import requests
 from BeautifulSoup import BeautifulSoup
 import time
 from datetime import datetime
+import webbrowser
 
 
+watch_group = ['139316', '294565', '274483', '331631', '258401', '59335', '233931']
 session = '?session=4cadd0ed_27729491'
 t = 'bid="lOFs30E7sxo"; ll="108296"; __utma=30149280.1960798155.1388989048.1390898784.1391832655.9; __utmz=30149280.1391832655.9.8.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); mbid=a19de12b; mdbs=295ed83cfb11ebaa7c1c88b6f135c2fe:9a657a1c1255e146:27729491'
 
@@ -22,8 +24,15 @@ for c in cs:
 def _search_in_group_topics(list, judge=None, _info=None):
     for item in list:
         link = item.contents[1].attrs[0][1]
-        # print link
-        # print item.contents[1].text
+        belong_group = item.contents[3].contents[1].attrs[0][1]
+
+        _go = False
+        for _g in watch_group:
+            if belong_group.find(_g) > 0:
+                _go = True
+                break
+        if not _go:
+            continue
 
         hot_url = 'http://m.douban.com'+link
 
@@ -38,8 +47,6 @@ def _search_in_group_topics(list, judge=None, _info=None):
         content = soup.find('div', {'class': 'entry item'})
         title = content.previous.previous
 
-        # /people/89241363/groups?session=c4338de0_27729491
-        # /people/89241363/about?session=0f95d97c_27729491
         founder_url = founder.attrs[0][1].replace('groups', 'about')
         if judge:
             if judge(founder_url, type=1):
@@ -63,10 +70,12 @@ def _search_in_group_topics(list, judge=None, _info=None):
                 if _info:
                     _info(u'{} {} {} {}'.format(hot_url, u'上海', title, founder_url))
                 print u'{} - {} - {}'.format(u'上海', hot_url.replace('m.', ''), title)
+                # webbrowser.open(hot_url.replace('m.', ''))
             elif info.contents[6].find(u'南京') > -1:
                 if _info:
                     _info(u'{} {} {} {}'.format(hot_url, u'南京', title, founder_url))
                 print u'{} - {} - {}'.format(u'南京', hot_url.replace('m.', ''), title)
+                # webbrowser.open(hot_url.replace('m.', ''))
             else:
                 # not shanghai
                 if _info:
