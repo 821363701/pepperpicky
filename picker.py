@@ -182,7 +182,10 @@ class Picker(object):
 
     def __start(self, get_list):
         while True:
-            self.__search_in_group_topics(get_list())
+            try:
+                self.__search_in_group_topics(get_list())
+            except Exception, e:
+                print e
             time.sleep(self.sleep_time)
 
     def start_latest(self):
