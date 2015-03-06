@@ -8,7 +8,7 @@ from datetime import datetime
 import webbrowser
 import logging
 
-logging.basicConfig(filename='picker.log', level=logging.DEBUG)
+logging.basicConfig(filename='picker.log', level=logging.INFO)
 
 key_word = [u'上海', u'魔都', u'南京', u'东营', u'征']
 target_area = [u'上海', u'江苏南京']
