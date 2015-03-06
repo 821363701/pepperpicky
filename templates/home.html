@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+
+    <title>pepper</title>
+</head>
+<body>
+
+    <div class="container">
+        <table class="table">
+            {% for line in lines %}
+            <tr>
+                <td>
+                    <a href="http://m.douban.com{{line[2]}}">{{line[1]}}</a>
+                </td>
+                <td>
+                    <a href="{{line[0]}}">{{line[3]}}</a>
+                </td>
+            </tr>
+            {% end %}
+        </table>
+    </div>
+
+
+</body>
+</html>

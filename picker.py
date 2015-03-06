@@ -8,7 +8,7 @@ from datetime import datetime
 import webbrowser
 
 
-key_word = [u'上海', u'魔都', u'南京', u'东营']
+key_word = [u'上海', u'魔都', u'南京', u'东营', u'征']
 target_area = [u'上海', u'江苏南京']
 watch_group = ['139316', '294565', '274483', '331631', '258401', '59335', '233931']
 session = '?id=27729491&session=d4a63410c4cf668feb8ec8fa73ec95db1c19cefc'
@@ -24,11 +24,14 @@ def contain_keyword(content):
 
 def print_open(url, title):
     print u'{} - {}'.format(url, title)
-    webbrowser.open(url)
+    # webbrowser.open(url)
 
 
 class Picker(object):
     def __init__(self):
+        self.check_group = True
+        self.sleep_time = 10
+
         self.visited_topic = set()
         self.user_area = dict()
 
@@ -80,14 +83,24 @@ class Picker(object):
             fp.write(u'{}\t{}\n'.format(url, title).encode('utf8'))
 
     def __search_in_group_topics(self, topics):
+        count_total = len(topics)
+        count_group = 0
+        count_visited = 0
+        count_not_target_area_before = 0
+        count_not_target_area = 0
+        count_keyword_open = 0
+        count_target_area = 0
+
         for item in topics:
-            # # check if group is target group
-            #
-            # belong_group = item.contents[3].contents[1].attrs[0][1]
-            #
-            # belong_group_id = belong_group.split('?')[0][7:-1]
-            # if belong_group_id not in watch_group:
-            #     continue
+            if self.check_group:
+                # check if group is target group
+
+                belong_group = item.contents[3].contents[1].attrs[0][1]
+
+                belong_group_id = belong_group.split('?')[0][7:-1]
+                if belong_group_id not in watch_group:
+                    count_group += 1
+                    continue
 
             # check if link is visited
 
@@ -98,6 +111,7 @@ class Picker(object):
             hot_url_unique = hot_url.split('?')[0]
 
             if hot_url_unique in self.visited_topic:
+                count_visited += 1
                 continue
 
             # visit the hot url
@@ -114,6 +128,7 @@ class Picker(object):
             founder_url_unique = founder_url.split('?')[0]
 
             if founder_url_unique in self.user_area and self.user_area[founder_url_unique] not in target_area:
+                count_not_target_area_before += 1
                 continue
 
             # title contain key word
@@ -124,6 +139,7 @@ class Picker(object):
             if contain_keyword(title):
                 self.__append_target_info(hot_url_unique, u'上海', founder_url_unique, title)
                 print_open(hot_url.replace('m.', ''), title)
+                count_keyword_open += 1
                 continue
 
             # check if user is in target area
@@ -138,13 +154,19 @@ class Picker(object):
                 if founder_area in target_area:
                     self.__append_target_info(hot_url_unique, founder_area, founder_url_unique, title)
                     print_open(hot_url.replace('m.', ''), title)
+                    count_target_area += 1
+                else:
+                    count_not_target_area += 1
 
                 self.__append_user_area(founder_url_unique, founder_area)
-                print founder_area
             else:
                 # no location
-                pass
-                # print 'no '
+                count_not_target_area += 1
+                self.__append_user_area(founder_url_unique, u'None')
+
+        print '[total: {} group: -{} visited: -{} area: -{} areab: -{}] = [keyword: {} area: {}] - {}'.format(
+            count_total, count_group, count_visited, count_not_target_area, count_not_target_area_before,
+            count_keyword_open, count_target_area, datetime.now().strftime('%Y%m%d %H:%M:%S'))
 
     def __get_latest_topic_list(self):
         url_group = 'http://m.douban.com/group/topics'
@@ -161,14 +183,17 @@ class Picker(object):
     def __start(self, get_list):
         while True:
             self.__search_in_group_topics(get_list())
-
-            time.sleep(20)
-            print '-----------------------------------------------------------'+datetime.now().strftime('%Y%m%d %H:%M:%S')
+            time.sleep(self.sleep_time)
 
     def start_latest(self):
+        self.sleep_time = 10
+
         self.__start(self.__get_latest_topic_list)
 
     def start_group(self, group_id):
+        self.check_group = False
+        self.sleep_time = 5
+
         def get_list():
             return self.__get_group_list(group_id)
 
@@ -177,3 +202,4 @@ class Picker(object):
 if __name__ == '__main__':
     p = Picker()
     p.start_latest()
+    # p.start_group('139316')
