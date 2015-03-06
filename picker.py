@@ -6,7 +6,9 @@ from BeautifulSoup import BeautifulSoup
 import time
 from datetime import datetime
 import webbrowser
+import logging
 
+logging.basicConfig(filename='picker.log', level=logging.DEBUG)
 
 key_word = [u'上海', u'魔都', u'南京', u'东营', u'征']
 target_area = [u'上海', u'江苏南京']
@@ -164,9 +166,11 @@ class Picker(object):
                 count_not_target_area += 1
                 self.__append_user_area(founder_url_unique, u'None')
 
-        print '[total: {} group: -{} visited: -{} area: -{} areab: -{}] = [keyword: {} area: {}] - {}'.format(
+        l = '[total: {} group: -{} visited: -{} area: -{} areab: -{}] = [keyword: {} area: {}] - {}'.format(
             count_total, count_group, count_visited, count_not_target_area, count_not_target_area_before,
             count_keyword_open, count_target_area, datetime.now().strftime('%Y%m%d %H:%M:%S'))
+        print l
+        logging.info(l)
 
     def __get_latest_topic_list(self):
         url_group = 'http://m.douban.com/group/topics'
@@ -185,7 +189,7 @@ class Picker(object):
             try:
                 self.__search_in_group_topics(get_list())
             except Exception, e:
-                print e
+                logging.error(e)
             time.sleep(self.sleep_time)
 
     def start_latest(self):
