@@ -195,6 +195,7 @@ class Picker(object):
 
     def start_latest(self):
         self.sleep_time = 10
+        self.check_group = False
 
         self.__start(self.__get_latest_topic_list)
 
