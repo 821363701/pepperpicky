@@ -8,11 +8,13 @@ import tornado.web
 
 class HomeHandler(tornado.web.RequestHandler):
     def get(self):
+        limit = int(self.get_argument('limit', 20))
+
         with open('target_info', 'r') as fp:
             raw_lines = fp.readlines()
 
         lines = []
-        for l in raw_lines[-20:]:
+        for l in raw_lines[-limit:]:
             lines.append(l.split('\t'))
 
         self.render('home.html', lines=lines)
