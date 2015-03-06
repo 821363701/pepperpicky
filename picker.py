@@ -20,8 +20,8 @@ t = 'viewed="6998797"; bid="n49InUGYqvg"; ll="108296"; dp=1; _ga=GA1.2.209818940
 def contain_keyword(content):
     for key in key_word:
         if content.find(key) > -1:
-            return True
-    return False
+            return key
+    return None
 
 
 def print_open(url, title):
@@ -138,8 +138,9 @@ class Picker(object):
             content = soup.find('div', {'class': 'entry item'})
             title = content.previous.previous
 
-            if contain_keyword(title):
-                self.__append_target_info(hot_url_unique, u'上海', founder_url_unique, title)
+            title_keyword = contain_keyword(title)
+            if title_keyword:
+                self.__append_target_info(hot_url_unique, title_keyword, founder_url_unique, title)
                 print_open(hot_url.replace('m.', ''), title)
                 count_keyword_open += 1
                 continue
