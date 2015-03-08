@@ -15,10 +15,10 @@
             {% for line in lines %}
             <tr>
                 <td>
-                    <a target="_blank" href="http://m.douban.com{{line[2]}}">{{line[1]}}</a>
+                    <a target="_blank" href="http://douban.com{{line[2].replace('about', '')}}">{{line[1]}}</a>
                 </td>
                 <td>
-                    <a target="_blank" href="{{line[0]}}">{{line[3]}}</a>
+                    <a target="_blank" href="{{line[0].replace('m.', '')}}">{{line[3]}}</a>
                 </td>
             </tr>
             {% end %}
