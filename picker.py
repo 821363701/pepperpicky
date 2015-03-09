@@ -209,6 +209,8 @@ class Picker(object):
         self.__start(get_list)
 
     def start_ex(self):
+        self.check_group = False
+
         while True:
             try:
                 self.__search_in_group_topics(self.__get_latest_topic_list())
