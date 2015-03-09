@@ -221,5 +221,6 @@ class Picker(object):
 
 if __name__ == '__main__':
     p = Picker()
-    p.start_latest()
+    p.start_ex()
+    # p.start_latest()
     # p.start_group('139316')
