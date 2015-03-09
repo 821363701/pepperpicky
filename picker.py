@@ -174,11 +174,14 @@ class Picker(object):
         logging.info(l)
 
     def __get_latest_topic_list(self):
-        url_group = 'http://m.douban.com/group/topics'
+        result = []
+        for i in range(1, 5):
+            url_group = 'http://m.douban.com/group/topics'
 
-        r = requests.get(url_group+session, cookies=self.cookies)
-        soup = BeautifulSoup(r.text)
-        return soup.findAll('div', {'class': 'item'})
+            r = requests.get(url_group+session+'&page='+str(i), cookies=self.cookies)
+            soup = BeautifulSoup(r.text)
+            result.extend(soup.findAll('div', {'class': 'item'}))
+        return result
 
     def __get_group_list(self, gid):
         r = requests.get('http://m.douban.com/group/'+gid+'/'+session, cookies=self.cookies)
@@ -214,8 +217,6 @@ class Picker(object):
         while True:
             try:
                 self.__search_in_group_topics(self.__get_latest_topic_list())
-                self.__search_in_group_topics(self.__get_group_list('139316'))
-                self.__search_in_group_topics(self.__get_group_list('294565'))
                 self.__search_in_group_topics(self.__get_group_list('516876'))
             except Exception, e:
                 logging.error(e)
