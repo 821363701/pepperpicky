@@ -10,6 +10,8 @@ class HomeHandler(tornado.web.RequestHandler):
     def get(self):
         limit = int(self.get_argument('limit', 20))
 
+        # todo autoreload
+
         with open('target_info', 'r') as fp:
             raw_lines = fp.readlines()
 

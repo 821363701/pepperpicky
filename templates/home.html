@@ -18,6 +18,11 @@
                     <a target="_blank" href="http://douban.com{{line[2].replace('about', '')}}">{{line[1]}}</a>
                 </td>
                 <td>
+                    {% if len(line) == 5 %}
+                    <span>{{datetime.datetime.fromtimestamp(float(line[4])).strftime('%m-%d %H:%M')}}</span>
+                    {% end %}
+                </td>
+                <td>
                     <a target="_blank" href="{{line[0].replace('m.', '')}}">{{line[3]}}</a>
                 </td>
             </tr>

@@ -76,7 +76,7 @@ class Picker(object):
 
     def __append_target_info(self, url, area, founder_url, title):
         with open('target_info', 'a') as fp:
-            fp.write(u'{}\t{}\t{}\t{}\n'.format(url, area, founder_url, title).encode('utf8'))
+            fp.write(u'{}\t{}\t{}\t{}\t{}\n'.format(url, area, founder_url, title, str(time.time())).encode('utf8'))
 
     def __append_visited_topic(self, url, title):
         self.visited_topic.add(url)
