@@ -47,15 +47,6 @@ class Picker(object):
         self.__load_config()
 
     def __load_config(self):
-        # deny_id
-
-        try:
-            with open('deny_id', 'r') as fp:
-                for l in fp:
-                    self.deny_id.add(l[:-1])
-        except IOError:
-            print 'no deny_id file'
-
         # visited_topic
 
         try:
@@ -75,6 +66,16 @@ class Picker(object):
                     self.user_area[ll[0]] = ll[1].decode('utf8')
         except IOError:
             print 'no user_area file'
+
+    def __period_load_config(self):
+        # deny_id
+
+        try:
+            with open('deny_id', 'r') as fp:
+                for l in fp:
+                    self.deny_id.add(l[:-1])
+        except IOError:
+            print 'no deny_id file'
 
     def __append_user_area(self, url, area):
         u_url = unicode(url)
@@ -230,6 +231,7 @@ class Picker(object):
         self.check_group = False
 
         while True:
+            self.__period_load_config()
             try:
                 self.__search_in_group_topics(self.__get_latest_topic_list())
                 self.__search_in_group_topics(self.__get_group_list('516876'))
