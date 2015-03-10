@@ -34,6 +34,7 @@ class Picker(object):
         self.check_group = True
         self.sleep_time = 10
 
+        self.deny_id = set()
         self.visited_topic = set()
         self.user_area = dict()
 
@@ -46,6 +47,15 @@ class Picker(object):
         self.__load_config()
 
     def __load_config(self):
+        # deny_id
+
+        try:
+            with open('deny_id', 'r') as fp:
+                for l in fp:
+                    self.deny_id.append(l[:-1])
+        except IOError:
+            print 'no deny_id file'
+
         # visited_topic
 
         try:
@@ -90,6 +100,7 @@ class Picker(object):
         count_visited = 0
         count_not_target_area_before = 0
         count_not_target_area = 0
+        count_deny = 0
         count_keyword_open = 0
         count_target_area = 0
 
@@ -129,6 +140,10 @@ class Picker(object):
             founder_url = founder.attrs[0][1].replace('groups', 'about')
             founder_url_unique = founder_url.split('?')[0]
 
+            if founder_url_unique.replace('/about', '')[8:-1] in self.deny_id:
+                count_deny += 1
+                continue
+
             if founder_url_unique in self.user_area and self.user_area[founder_url_unique] not in target_area:
                 count_not_target_area_before += 1
                 continue
@@ -167,8 +182,8 @@ class Picker(object):
                 count_not_target_area += 1
                 self.__append_user_area(founder_url_unique, u'None')
 
-        l = '[total: {} group: -{} visited: -{} area: -{} areab: -{}] = [keyword: {} area: {}] - {}'.format(
-            count_total, count_group, count_visited, count_not_target_area, count_not_target_area_before,
+        l = '[total: {} group: -{} visited: -{} area: -{} areab: -{} deny: -{}] = [keyword: {} area: {}] - {}'.format(
+            count_total, count_group, count_visited, count_not_target_area, count_not_target_area_before, count_deny,
             count_keyword_open, count_target_area, datetime.now().strftime('%Y%m%d %H:%M:%S'))
         print l
         logging.info(l)
