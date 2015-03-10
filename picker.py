@@ -52,7 +52,7 @@ class Picker(object):
         try:
             with open('deny_id', 'r') as fp:
                 for l in fp:
-                    self.deny_id.append(l[:-1])
+                    self.deny_id.add(l[:-1])
         except IOError:
             print 'no deny_id file'
 
