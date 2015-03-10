@@ -11,10 +11,19 @@
 <body>
 
     <div class="container">
-        <div class="btn-group" role="group" style="margin: 20px 0">
-            <a href="/pepper" target="_self" type="button" class="btn btn-default">刷新</a>
-            <a href="/search" target="_blank" type="button" class="btn btn-default">查找</a>
-        </div>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/pepper" target="_self">刷新</a>
+                    </li>
+                    <li>
+                        <a href="/search" target="_blank">查找</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
 
         {% for line in lines %}
         <div class="panel panel-default">
