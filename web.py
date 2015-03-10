@@ -43,6 +43,25 @@ class DenyHandler(tornado.web.RequestHandler):
         self.write('deny ok')
 
 
+class SearchHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('search.html')
+
+    def post(self):
+        query = self.get_argument('q')
+
+        with open('target_info', 'r') as fp:
+            raw_lines = fp.readlines()
+
+        lines = []
+        for l in raw_lines:
+            split_line = l.split('\t')
+            if split_line[2].find(query) > -1:
+                lines.append(split_line)
+
+        self.render('home.html', lines=lines)
+
+
 class Application(tornado.web.Application):
     def __init__(self):
         settings = dict(
@@ -52,6 +71,8 @@ class Application(tornado.web.Application):
 
         _handlers = [
             (r"/pepper", HomeHandler),
+            (r"/search", SearchHandler),
+
             (r"/deny/(.*)", DenyHandler),
         ]
 
