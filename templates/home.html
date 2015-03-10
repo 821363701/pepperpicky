@@ -11,26 +11,25 @@
 <body>
 
     <div class="container">
-        <table class="table">
+        <ul class="list-group">
             {% for line in lines %}
-            <tr>
-                <td>
+            <li class="list-group-item">
+                <h4 class="list-group-item-heading">
                     <a target="_blank" href="http://douban.com{{line[2].replace('about', '')}}">{{line[1]}}</a>
-                </td>
-                <td>
+
                     {% if len(line) == 5 %}
                     <span>{{datetime.datetime.fromtimestamp(float(line[4])).strftime('%m-%d %H:%M')}}</span>
                     {% end %}
-                </td>
-                <td>
-                    <a target="_blank" href="{{line[0].replace('m.', '')}}">{{line[3]}}</a>
-                </td>
-                <td>
+
                     <a target="_blank" href="/deny/{{line[2].replace('/about', '')[8:-1]}}" class="btn btn-danger">X</a>
-                </td>
-            </tr>
+                </h4>
+                <p class="list-group-item-text">
+                    <a target="_blank" href="{{line[0].replace('m.', '')}}">{{line[3]}}</a>
+                </p>
+            </li>
             {% end %}
-        </table>
+        </ul>
+
     </div>
 
 
