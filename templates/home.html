@@ -25,6 +25,9 @@
                 <td>
                     <a target="_blank" href="{{line[0].replace('m.', '')}}">{{line[3]}}</a>
                 </td>
+                <td>
+                    <a target="_blank" href="/deny/{{line[2].replace('/about', '')[8:-1]}}" class="btn btn-danger">X</a>
+                </td>
             </tr>
             {% end %}
         </table>

@@ -6,6 +6,15 @@ import tornado.ioloop
 import tornado.web
 
 
+deny = []
+try:
+    with open('deny_id', 'r') as fp:
+        for line in fp:
+            deny.append(line[:-1])
+except IOError:
+    print 'no deny_id file'
+
+
 class HomeHandler(tornado.web.RequestHandler):
     def get(self):
         limit = int(self.get_argument('limit', 20))
@@ -17,9 +26,21 @@ class HomeHandler(tornado.web.RequestHandler):
 
         lines = []
         for l in raw_lines[-limit:]:
-            lines.append(l.split('\t'))
+            split_line = l.split('\t')
+            if split_line[2].replace('/about', '')[8:-1] in deny:
+                continue
+            lines.append(split_line)
 
         self.render('home.html', lines=lines)
+
+
+class DenyHandler(tornado.web.RequestHandler):
+    def get(self, deny_id):
+        deny.append(deny_id)
+
+        with open('deny_id', 'a') as fp:
+            fp.write('{}\n'.format(deny_id))
+        self.write('deny ok')
 
 
 class Application(tornado.web.Application):
@@ -31,6 +52,7 @@ class Application(tornado.web.Application):
 
         _handlers = [
             (r"/pepper", HomeHandler),
+            (r"/deny/(.*)", DenyHandler),
         ]
 
         tornado.web.Application.__init__(self, _handlers, **settings)
