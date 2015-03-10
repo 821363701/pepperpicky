@@ -40,7 +40,7 @@ class DenyHandler(tornado.web.RequestHandler):
 
         with open('deny_id', 'a') as fp:
             fp.write('{}\n'.format(deny_id))
-        self.write('deny ok')
+        self.redirect('/pepper')
 
 
 class SearchHandler(tornado.web.RequestHandler):
