@@ -21,7 +21,7 @@
                     <span>{{datetime.datetime.fromtimestamp(float(line[4])).strftime('%m-%d %H:%M')}}</span>
                     {% end %}
 
-                    <a target="_blank" href="/deny/{{line[2].replace('/about', '')[8:-1]}}" class="btn btn-danger">X</a>
+                    <a target="_blank" href="/deny/{{line[2].replace('/about', '')[8:-1]}}" class="btn btn-danger pull-right">X</a>
                 </h4>
                 <p class="list-group-item-text">
                     <a target="_blank" href="{{line[0].replace('m.', '')}}">{{line[3]}}</a>
