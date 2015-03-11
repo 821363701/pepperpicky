@@ -30,6 +30,7 @@ class HomeHandler(tornado.web.RequestHandler):
             if split_line[2].replace('/about', '')[8:-1] in deny:
                 continue
             lines.append(split_line)
+        lines.reverse()
 
         self.render('home.html', lines=lines)
 
@@ -58,6 +59,7 @@ class SearchHandler(tornado.web.RequestHandler):
             split_line = l.split('\t')
             if split_line[2].find(query) > -1:
                 lines.append(split_line)
+        lines.reverse()
 
         self.render('home.html', lines=lines)
 
