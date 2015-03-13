@@ -228,6 +228,7 @@ class Picker(object):
         self.__start(get_list)
 
     def start_ex(self):
+        self.sleep_time = 5
         self.check_group = False
 
         while True:
