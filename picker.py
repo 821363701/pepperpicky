@@ -228,14 +228,14 @@ class Picker(object):
         self.__start(get_list)
 
     def start_ex(self):
-        self.sleep_time = 1
+        self.sleep_time = 5
         self.check_group = False
 
         while True:
             self.__period_load_config()
             try:
                 self.__search_in_group_topics(self.__get_latest_topic_list())
-                self.__search_in_group_topics(self.__get_group_list('516876'))
+                #self.__search_in_group_topics(self.__get_group_list('516876'))
             except Exception, e:
                 logging.error(e)
             time.sleep(self.sleep_time)
