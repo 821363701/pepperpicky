@@ -7,6 +7,7 @@ import time
 from datetime import datetime
 import webbrowser
 import logging
+import random
 
 logging.basicConfig(filename='picker.log', level=logging.INFO)
 
@@ -94,6 +95,9 @@ class Picker(object):
 
         with open('visited_topic', 'a') as fp:
             fp.write(u'{}\t{}\n'.format(url, title).encode('utf8'))
+
+    def __fetch(self, url):
+	pass
 
     def __search_in_group_topics(self, topics):
         count_total = len(topics)
@@ -193,10 +197,11 @@ class Picker(object):
         result = []
         for i in range(1, 5):
             url_group = 'http://m.douban.com/group/topics'
-
+	    
             r = requests.get(url_group+session+'&page='+str(i), cookies=self.cookies)
             soup = BeautifulSoup(r.text)
             result.extend(soup.findAll('div', {'class': 'item'}))
+	    time.sleep(random.randint(1, 2))
         return result
 
     def __get_group_list(self, gid):
@@ -228,7 +233,7 @@ class Picker(object):
         self.__start(get_list)
 
     def start_ex(self):
-        self.sleep_time = 5
+        self.sleep_time = 1
         self.check_group = False
 
         while True:
