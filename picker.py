@@ -47,6 +47,8 @@ class Picker(object):
 
         self.__load_config()
 
+        self.fetch_last_ts = time.time()
+
     def __load_config(self):
         # visited_topic
 
@@ -97,7 +99,12 @@ class Picker(object):
             fp.write(u'{}\t{}\n'.format(url, title).encode('utf8'))
 
     def __fetch(self, url):
-	pass
+        interval = time.time() - self.fetch_last_ts
+        if interval < .5:
+            time.sleep(random.randint(1, 10)/10.0)
+
+        self.fetch_last_ts = time.time()
+        return requests.get(url, cookies=self.cookies)
 
     def __search_in_group_topics(self, topics):
         count_total = len(topics)
@@ -136,7 +143,7 @@ class Picker(object):
 
             self.__append_visited_topic(hot_url_unique, topic_title)
 
-            rr = requests.get(hot_url, cookies=self.cookies)
+            rr = self.__fetch(hot_url)
             soup = BeautifulSoup(rr.text)
 
             # check if founder is not target area
@@ -167,7 +174,7 @@ class Picker(object):
 
             # check if user is in target area
 
-            rrr = requests.get('http://m.douban.com'+founder_url, cookies=self.cookies)
+            rrr = self.__fetch('http://m.douban.com'+founder_url)
             soup = BeautifulSoup(rrr.text)
             founder_info = soup.find('div', {'class': 'info'})
 
@@ -197,15 +204,14 @@ class Picker(object):
         result = []
         for i in range(1, 5):
             url_group = 'http://m.douban.com/group/topics'
-	    
-            r = requests.get(url_group+session+'&page='+str(i), cookies=self.cookies)
+
+            r = self.__fetch(url_group + session + '&page=' + str(i))
             soup = BeautifulSoup(r.text)
             result.extend(soup.findAll('div', {'class': 'item'}))
-	    time.sleep(random.randint(1, 2))
         return result
 
     def __get_group_list(self, gid):
-        r = requests.get('http://m.douban.com/group/'+gid+'/'+session, cookies=self.cookies)
+        r = self.__fetch('http://m.douban.com/group/'+gid+'/'+session)
         soup = BeautifulSoup(r.text)
         return soup.findAll('div', {'class': 'item'})
 
@@ -215,7 +221,6 @@ class Picker(object):
                 self.__search_in_group_topics(get_list())
             except Exception, e:
                 logging.error(e)
-            time.sleep(self.sleep_time)
 
     def start_latest(self):
         self.sleep_time = 10
@@ -243,7 +248,6 @@ class Picker(object):
                 #self.__search_in_group_topics(self.__get_group_list('516876'))
             except Exception, e:
                 logging.error(e)
-            time.sleep(self.sleep_time)
 
 if __name__ == '__main__':
     p = Picker()
