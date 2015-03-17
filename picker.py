@@ -25,7 +25,7 @@ def send_mail(text):
     msg['Subject'] = 'pepper message'
 
     msg['From'] = '821363701@qq.com'
-    msg['To'] = '17202396@qq.com'
+    msg['To'] = '821363701@qq.com'
 
     s = smtplib.SMTP_SSL('smtp.exmail.qq.com')
     s.login('821363701@qq.com', '821363701pepper')
