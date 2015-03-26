@@ -13,7 +13,7 @@ from email.mime.text import MIMEText
 
 logging.basicConfig(filename='picker.log', level=logging.INFO)
 
-key_word = [u'上海', u'魔]
+key_word = [u'上海']
 target_area = [u'上海']
 watch_group = ['139316', '294565', '274483', '331631', '258401', '59335', '233931']
 session = '?id=27729491&session=d4a63410c4cf668feb8ec8fa73ec95db1c19cefc'
