@@ -28,7 +28,7 @@
         {% for line in lines %}
         <div class="panel panel-default">
             <div class="panel-heading">
-                {% if len(line) == 5 %}
+                {% if line[4] %}
                 <span>{{datetime.datetime.fromtimestamp(float(line[4])).strftime('%m-%d %H:%M')}}</span>
                 {% end %}
 
