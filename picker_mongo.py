@@ -15,7 +15,7 @@ from const import *
 logging.basicConfig(filename='picker.log', level=logging.INFO)
 
 key_word = [u'上海', u'魔都']
-target_area = [u'上海', u'江苏南京']
+target_area = [u'上海', u'江苏南京', u'浙江杭州']
 watch_group = ['139316', '294565', '274483', '331631', '258401', '59335', '233931']
 session = '?id=27729491&session=d4a63410c4cf668feb8ec8fa73ec95db1c19cefc'
 t = 'viewed="6998797"; bid="n49InUGYqvg"; ll="108296"; dp=1; _ga=GA1.2.2098189400.1390826620; __utmt=1; ap=1; ps=y; ue="doubanxiong@live.cn"; dbcl2="27729491:o75dit0+w+g"; ck="6--W"; push_noty_num=0; push_doumail_num=3; __utma=30149280.2098189400.1390826620.1425542831.1425547321.50; __utmb=30149280.24.9.1425547406801; __utmc=30149280; __utmz=30149280.1425542831.49.16.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmv=30149280.2772; mbid=eb497e49; mdbs=295ed83cfb11ebaa7c1c88b6f135c2fe:9a657a1c1255e146:27729491'
