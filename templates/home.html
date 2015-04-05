@@ -34,7 +34,7 @@
 
                 <a target="_blank" href="http://douban.com{{line[2].replace('about', '')}}">{{line[1]}}</a>
 
-                <div deny_id="{{line[2].replace('/about', '')[8:-1]}}" class="btn btn-danger btn-xs pull-right pp-delete">X</div>
+                <div deny_id="{{line[2].replace('/about', '')[8:]}}" class="btn btn-danger btn-xs pull-right pp-delete">X</div>
             </div>
             <div class="panel-body">
                 <a target="_blank" href="{{line[0].replace('m.', '')}}">{{line[3]}}</a>

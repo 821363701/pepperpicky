@@ -63,7 +63,7 @@ class MongoHomeHandler(tornado.web.RequestHandler):
 
         lines = []
         for l in self.application.c.target_info.find({}, limit=limit).sort('_id', pymongo.DESCENDING):
-            lines.append(['http://m.douban.com/group/topic/'+l['topic_id'], l['keyword'],
+            lines.append(['http://m.douban.com/group/topic/{}/'.format(l['topic_id']), l['keyword'],
                           '/people/{}/about'.format(l['founder_id']), l['topic_title'], l['timestamp']])
 
         self.render('home.html', lines=lines)
