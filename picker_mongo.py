@@ -5,18 +5,33 @@ import requests
 from BeautifulSoup import BeautifulSoup
 import time
 from datetime import datetime
-from pymongo import MongoClient
 import logging
+import random
+import smtplib
+from email.mime.text import MIMEText
+from pymongo import MongoClient
+from const import *
 
 logging.basicConfig(filename='picker.log', level=logging.INFO)
 
-mongo_client = MongoClient('mongodb://pepper:821363701@ds060977.mongolab.com:60977/pepper')
-
-key_word = [u'上海', u'魔都', u'南京', u'东营', u'征']
-target_area = [u'上海', u'江苏南京']
+key_word = [u'上海', u'魔都']
+target_area = [u'上海']
 watch_group = ['139316', '294565', '274483', '331631', '258401', '59335', '233931']
 session = '?id=27729491&session=d4a63410c4cf668feb8ec8fa73ec95db1c19cefc'
 t = 'viewed="6998797"; bid="n49InUGYqvg"; ll="108296"; dp=1; _ga=GA1.2.2098189400.1390826620; __utmt=1; ap=1; ps=y; ue="doubanxiong@live.cn"; dbcl2="27729491:o75dit0+w+g"; ck="6--W"; push_noty_num=0; push_doumail_num=3; __utma=30149280.2098189400.1390826620.1425542831.1425547321.50; __utmb=30149280.24.9.1425547406801; __utmc=30149280; __utmz=30149280.1425542831.49.16.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmv=30149280.2772; mbid=eb497e49; mdbs=295ed83cfb11ebaa7c1c88b6f135c2fe:9a657a1c1255e146:27729491'
+
+
+def send_mail(text):
+    msg = MIMEText(text)
+    msg['Subject'] = 'pepper message'
+
+    msg['From'] = '821363701@qq.com'
+    msg['To'] = '821363701@qq.com'
+
+    s = smtplib.SMTP_SSL('smtp.exmail.qq.com')
+    s.login('821363701@qq.com', '821363701pepper')
+    s.sendmail('821363701@qq.com', ['821363701@qq.com'], msg.as_string())
+    s.quit()
 
 
 def contain_keyword(content):
@@ -28,74 +43,60 @@ def contain_keyword(content):
 
 def print_open(url, title):
     print u'{} - {}'.format(url, title)
-    # webbrowser.open(url)
 
 
 class Picker(object):
     def __init__(self):
+        self.c = MongoClient('121.199.5.143').pick
+
         self.check_group = True
         self.sleep_time = 10
 
-        self.deny_id = set()
-        self.visited_topic = set()
-        self.user_area = dict()
-
         self.cookies = dict()
         cs = t.split(';')
-        for c in cs:
-            parts = c.strip().split('=')
+        for cookie in cs:
+            parts = cookie.strip().split('=')
             self.cookies[parts[0]] = parts[1]
 
-        self.__load_config()
-
-    def __load_config(self):
-        # visited_topic
-
-        try:
-            with open('visited_topic', 'r') as fp:
-                for l in fp:
-                    ll = l[:-1].split('\t')
-                    self.visited_topic.add(ll[0])
-        except IOError:
-            print 'no visited_topic file'
-
-        # user_area
-
-        try:
-            with open('user_area', 'r') as fp:
-                for l in fp:
-                    ll = l[:-1].split('\t')
-                    self.user_area[ll[0]] = ll[1].decode('utf8')
-        except IOError:
-            print 'no user_area file'
-
-    def __period_load_config(self):
-        # deny_id
-
-        try:
-            with open('deny_id', 'r') as fp:
-                for l in fp:
-                    self.deny_id.add(l[:-1])
-        except IOError:
-            print 'no deny_id file'
+        self.fetch_last_ts = time.time()
 
     def __append_user_area(self, url, area):
         u_url = unicode(url)
         u_area = unicode(area)
 
-        self.user_area[url] = u_area
-        with open('user_area', 'a') as fp:
-            fp.write(u'{}\t{}\n'.format(u_url, u_area).encode('utf8'))
+        self.c.user_area.insert({
+            'people_id': u_url[8:-6],
+            'people_area': u_area
+        })
 
     def __append_target_info(self, url, area, founder_url, title):
-        with open('target_info', 'a') as fp:
-            fp.write(u'{}\t{}\t{}\t{}\t{}\n'.format(url, area, founder_url, title, str(time.time())).encode('utf8'))
+        topic_id = url.split('topic')[1][1:-1]
+        founder_id = founder_url[8:-6]
+
+        self.c.target_info.insert({
+            'topic_id': topic_id,
+            'topic_title': title,
+            'keyword': area,
+            'founder_id': founder_id,
+            'timestamp': str(time.time()),
+            'source': SOURCE_DOUBAN,
+        })
 
     def __append_visited_topic(self, url, title):
-        self.visited_topic.add(url)
+        topic_id = url.split('/')[-2]
 
-        with open('visited_topic', 'a') as fp:
-            fp.write(u'{}\t{}\n'.format(url, title).encode('utf8'))
+        self.c.visited_topic.insert({
+            'topic_id': topic_id,
+            'topic_title': title
+        })
+
+    def __fetch(self, url):
+        interval = time.time() - self.fetch_last_ts
+        if interval < 1:
+            time.sleep(random.randint(1, 2))
+
+        self.fetch_last_ts = time.time()
+        return requests.get(url, cookies=self.cookies)
 
     def __search_in_group_topics(self, topics):
         count_total = len(topics)
@@ -126,7 +127,11 @@ class Picker(object):
             hot_url = 'http://m.douban.com'+link
             hot_url_unique = hot_url.split('?')[0]
 
-            if hot_url_unique in self.visited_topic:
+            hot_url_unique_id = hot_url_unique.split('/')[-2]
+            visited = self.c.visited_topic.find_one({
+                'topic_id': hot_url_unique_id
+            })
+            if visited:
                 count_visited += 1
                 continue
 
@@ -134,7 +139,7 @@ class Picker(object):
 
             self.__append_visited_topic(hot_url_unique, topic_title)
 
-            rr = requests.get(hot_url, cookies=self.cookies)
+            rr = self.__fetch(hot_url)
             soup = BeautifulSoup(rr.text)
 
             # check if founder is not target area
@@ -143,11 +148,18 @@ class Picker(object):
             founder_url = founder.attrs[0][1].replace('groups', 'about')
             founder_url_unique = founder_url.split('?')[0]
 
-            if founder_url_unique.replace('/about', '')[8:-1] in self.deny_id:
+            founder_url_unique_id = founder_url_unique.replace('/about', '')[8:-1]
+            denied = self.c.deny_id.find_one({
+                'deny_id': founder_url_unique_id
+            })
+            if denied:
                 count_deny += 1
                 continue
 
-            if founder_url_unique in self.user_area and self.user_area[founder_url_unique] not in target_area:
+            people_area = self.c.user_area.find_one({
+                'people_id': founder_url_unique_id
+            })
+            if people_area and people_area['people_area'] not in target_area:
                 count_not_target_area_before += 1
                 continue
 
@@ -165,7 +177,7 @@ class Picker(object):
 
             # check if user is in target area
 
-            rrr = requests.get('http://m.douban.com'+founder_url, cookies=self.cookies)
+            rrr = self.__fetch('http://m.douban.com'+founder_url)
             soup = BeautifulSoup(rrr.text)
             founder_info = soup.find('div', {'class': 'info'})
 
@@ -196,13 +208,13 @@ class Picker(object):
         for i in range(1, 5):
             url_group = 'http://m.douban.com/group/topics'
 
-            r = requests.get(url_group+session+'&page='+str(i), cookies=self.cookies)
+            r = self.__fetch(url_group + session + '&page=' + str(i))
             soup = BeautifulSoup(r.text)
             result.extend(soup.findAll('div', {'class': 'item'}))
         return result
 
     def __get_group_list(self, gid):
-        r = requests.get('http://m.douban.com/group/'+gid+'/'+session, cookies=self.cookies)
+        r = self.__fetch('http://m.douban.com/group/'+gid+'/'+session)
         soup = BeautifulSoup(r.text)
         return soup.findAll('div', {'class': 'item'})
 
@@ -212,7 +224,6 @@ class Picker(object):
                 self.__search_in_group_topics(get_list())
             except Exception, e:
                 logging.error(e)
-            time.sleep(self.sleep_time)
 
     def start_latest(self):
         self.sleep_time = 10
@@ -230,16 +241,17 @@ class Picker(object):
         self.__start(get_list)
 
     def start_ex(self):
+        self.sleep_time = 1
         self.check_group = False
 
         while True:
-            self.__period_load_config()
             try:
                 self.__search_in_group_topics(self.__get_latest_topic_list())
-                self.__search_in_group_topics(self.__get_group_list('516876'))
+                #self.__search_in_group_topics(self.__get_group_list('516876'))
             except Exception, e:
                 logging.error(e)
-            time.sleep(self.sleep_time)
+                send_mail(str(e))
+                time.sleep(60)
 
 if __name__ == '__main__':
     p = Picker()

@@ -3,7 +3,7 @@ __author__ = 'yuxizhou'
 from const import *
 from pymongo import MongoClient
 
-c = MongoClient('127.0.0.1').pick
+c = MongoClient('121.199.5.143').pick
 # c = MongoClient('192.168.125.150').pick
 
 with open('target_info', 'r') as fp:
