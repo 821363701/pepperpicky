@@ -92,8 +92,8 @@ class Picker(object):
 
     def __fetch(self, url):
         interval = time.time() - self.fetch_last_ts
-        if interval < 1:
-            time.sleep(random.randint(1, 2))
+	if interval < 0.5:
+            time.sleep(0.5)
 
         self.fetch_last_ts = time.time()
         return requests.get(url, cookies=self.cookies)
