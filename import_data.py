@@ -1,10 +1,10 @@
 __author__ = 'yuxizhou'
 
-from pymongo import MongoClient
 from const import *
-import time
+from pymongo import MongoClient
 
-mongo_client = MongoClient('mongodb://pepper:821363701@ds029950.mongolab.com:29950/pepper').pepper
+c = MongoClient('127.0.0.1').pick
+# c = MongoClient('192.168.125.150').pick
 
 with open('target_info', 'r') as fp:
     for line in fp:
@@ -18,8 +18,7 @@ with open('target_info', 'r') as fp:
         topic_id = split_line[0].split('topic')[1][1:-1]
         founder_id = split_line[2][8:-6]
 
-        a = time.time()
-        mongo_client.test_target_info.insert({
+        c.target_info.insert({
             'topic_id': topic_id,
             'topic_title': split_line[3],
             'keyword': split_line[1],
@@ -27,5 +26,33 @@ with open('target_info', 'r') as fp:
             'timestamp': ts,
             'source': SOURCE_DOUBAN,
         })
-        b = time.time()
-        print (b-a)
+
+with open('user_area', 'r') as fp:
+    for line in fp:
+        split_line = line.split('\t')
+
+        if len(split_line) != 2:
+            continue
+
+        people_id = split_line[0][8:-6]
+        people_area = split_line[1]
+
+        c.user_area.insert({
+            'people_id': people_id,
+            'people_area': people_area
+        })
+
+with open('visited_topic', 'r') as fp:
+    for line in fp:
+        split_line = line.split('\t')
+
+        if len(split_line) != 2:
+            continue
+
+        topic_id = split_line[0].split('/')[-2]
+        topic_title = split_line[1]
+
+        c.visited_topic.insert({
+            'topic_id': topic_id,
+            'topic_title': topic_title
+        })
