@@ -92,7 +92,7 @@ class Picker(object):
 
     def __fetch(self, url):
         interval = time.time() - self.fetch_last_ts
-	if interval < 0.5:
+        if interval < 0.5:
             time.sleep(0.5)
 
         self.fetch_last_ts = time.time()
@@ -148,7 +148,7 @@ class Picker(object):
             founder_url = founder.attrs[0][1].replace('groups', 'about')
             founder_url_unique = founder_url.split('?')[0]
 
-            founder_url_unique_id = founder_url_unique.replace('/about', '')[8:-1]
+            founder_url_unique_id = founder_url_unique.replace('/about', '')[8:]
             denied = self.c.deny_id.find_one({
                 'deny_id': founder_url_unique_id
             })
