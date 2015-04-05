@@ -4,15 +4,8 @@ import os
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
-
-
-deny = []
-try:
-    with open('deny_id', 'r') as fp:
-        for line in fp:
-            deny.append(line[:-1])
-except IOError:
-    print 'no deny_id file'
+from pymongo import MongoClient
+import pymongo
 
 
 class HomeHandler(tornado.web.RequestHandler):
@@ -64,6 +57,48 @@ class SearchHandler(tornado.web.RequestHandler):
         self.render('home.html', lines=lines)
 
 
+class MongoHomeHandler(tornado.web.RequestHandler):
+    def get(self):
+        limit = int(self.get_argument('limit', 20))
+
+        lines = []
+        for l in self.application.c.target_info.find({}, limit=limit).sort('_id', pymongo.DESCENDING):
+            lines.append(['http://m.douban.com/group/topic/'+l['topic_id'], l['keyword'],
+                          '/people/{}/about'.format(l['founder_id']), l['topic_title'], l['timestamp']])
+
+        self.render('home.html', lines=lines)
+
+
+class MongoDenyHandler(tornado.web.RequestHandler):
+    def get(self, deny_id):
+        self.application.c.deny_id.insert({
+            'deny_id': deny_id
+        })
+
+        self.application.c.target_info.remove({
+            'founder_id': deny_id
+        })
+
+        self.write('0')
+
+
+class MongoSearchHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('search.html')
+
+    def post(self):
+        query = self.get_argument('q')
+
+        lines = []
+        for l in self.application.c.target_info.find({
+            'founder_id': query
+        }).sort('_id', pymongo.DESCENDING):
+            lines.append(['http://m.douban.com/group/topic/'+l['topic_id'], l['keyword'],
+                          '/people/{}/about'.format(l['founder_id']), l['topic_title'], l['timestamp']])
+
+        self.render('home.html', lines=lines)
+
+
 class Application(tornado.web.Application):
     def __init__(self):
         settings = dict(
@@ -72,13 +107,15 @@ class Application(tornado.web.Application):
         )
 
         _handlers = [
-            (r"/pepper", HomeHandler),
-            (r"/search", SearchHandler),
+            (r"/pepper", MongoHomeHandler),
+            (r"/search", MongoSearchHandler),
 
-            (r"/deny/(.*)", DenyHandler),
+            (r"/deny/(.*)", MongoDenyHandler),
         ]
 
         tornado.web.Application.__init__(self, _handlers, **settings)
+
+        self.c = MongoClient('121.199.5.143').pick
 
 
 application = Application()
