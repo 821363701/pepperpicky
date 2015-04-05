@@ -82,11 +82,11 @@ class Picker(object):
             'source': SOURCE_DOUBAN,
         })
 
-    def __append_none_area(self, url, area, founder_url, title):
+    def __append_all_topic(self, url, area, founder_url, title):
         topic_id = url.split('topic')[1][1:-1]
         founder_id = founder_url[8:-6]
 
-        self.c.none_area.insert({
+        self.c.all_topic.insert({
             'topic_id': topic_id,
             'topic_title': title,
             'keyword': area,
@@ -204,11 +204,13 @@ class Picker(object):
                 else:
                     count_not_target_area += 1
 
+                self.__append_all_topic(hot_url_unique, founder_area, founder_url_unique, title)
                 self.__append_user_area(founder_url_unique, founder_area)
             else:
                 # no location
                 count_not_target_area += 1
-                self.__append_none_area(hot_url_unique, founder_area, founder_url_unique, title)
+
+                self.__append_all_topic(hot_url_unique, u'None', founder_url_unique, title)
                 self.__append_user_area(founder_url_unique, u'None')
 
         l = '[total: {} group: -{} visited: -{} area: -{} areab: -{} deny: -{}] = [keyword: {} area: {}] - {}'.format(
