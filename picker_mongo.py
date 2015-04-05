@@ -82,6 +82,19 @@ class Picker(object):
             'source': SOURCE_DOUBAN,
         })
 
+    def __append_none_area(self, url, area, founder_url, title):
+        topic_id = url.split('topic')[1][1:-1]
+        founder_id = founder_url[8:-6]
+
+        self.c.none_area.insert({
+            'topic_id': topic_id,
+            'topic_title': title,
+            'keyword': area,
+            'founder_id': founder_id,
+            'timestamp': str(time.time()),
+            'source': SOURCE_DOUBAN,
+        })
+
     def __append_visited_topic(self, url, title):
         topic_id = url.split('/')[-2]
 
@@ -195,6 +208,7 @@ class Picker(object):
             else:
                 # no location
                 count_not_target_area += 1
+                self.__append_none_area(hot_url_unique, founder_area, founder_url_unique, title)
                 self.__append_user_area(founder_url_unique, u'None')
 
         l = '[total: {} group: -{} visited: -{} area: -{} areab: -{} deny: -{}] = [keyword: {} area: {}] - {}'.format(
