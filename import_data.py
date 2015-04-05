@@ -7,7 +7,6 @@ c = MongoClient('121.199.5.143').pick
 # c = MongoClient('192.168.125.150').pick
 
 with open('target_info', 'r') as fp:
-    count = 0
     for line in fp:
         split_line = line[:-1].split('\t')
 
@@ -28,43 +27,40 @@ with open('target_info', 'r') as fp:
             'source': SOURCE_DOUBAN,
         })
 
-        count+=1
-        print count
+with open('user_area', 'r') as fp:
+    for line in fp:
+        split_line = line[:-1].split('\t')
 
-# with open('user_area', 'r') as fp:
-#     for line in fp:
-#         split_line = line[:-1].split('\t')
-#
-#         if len(split_line) != 2:
-#             continue
-#
-#         people_id = split_line[0][8:-6]
-#         people_area = split_line[1]
-#
-#         c.user_area.insert({
-#             'people_id': people_id,
-#             'people_area': people_area
-#         })
+        if len(split_line) != 2:
+            continue
 
-# with open('visited_topic', 'r') as fp:
-#     for line in fp:
-#         split_line = line[:-1].split('\t')
-#
-#         if len(split_line) != 2:
-#             continue
-#
-#         topic_id = split_line[0].split('/')[-2]
-#         topic_title = split_line[1]
-#
-#         c.visited_topic.insert({
-#             'topic_id': topic_id,
-#             'topic_title': topic_title
-#         })
+        people_id = split_line[0][8:-6]
+        people_area = split_line[1]
 
-# with open('deny_id', 'r') as fp:
-#     for line in fp:
-#         deny_id = line[:-1]
-#
-#         c.deny_id.insert({
-#             'deny_id': deny_id
-#         })
+        c.user_area.insert({
+            'people_id': people_id,
+            'people_area': people_area
+        })
+
+with open('visited_topic', 'r') as fp:
+    for line in fp:
+        split_line = line[:-1].split('\t')
+
+        if len(split_line) != 2:
+            continue
+
+        topic_id = split_line[0].split('/')[-2]
+        topic_title = split_line[1]
+
+        c.visited_topic.insert({
+            'topic_id': topic_id,
+            'topic_title': topic_title
+        })
+
+with open('deny_id', 'r') as fp:
+    for line in fp:
+        deny_id = line[:-1]
+
+        c.deny_id.insert({
+            'deny_id': deny_id
+        })
