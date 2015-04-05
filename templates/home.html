@@ -32,12 +32,14 @@
                 <span>{{datetime.datetime.fromtimestamp(float(line[4])).strftime('%m-%d %H:%M')}}</span>
                 {% end %}
 
-                <a target="_blank" href="http://douban.com{{line[2].replace('about', '')}}">{{line[1]}}</a>
+                <a class="btn btn-xs btn-info" target="_blank" href="http://douban.com/people/{{line[2]}}/">{{line[1]}}</a>
+
+                <a class="btn btn-xs btn-primary" target="_blank" href="/history?q={{line[2]}}">历史</a>
 
                 <div deny_id="{{line[2].replace('/about', '')[8:]}}" class="btn btn-danger btn-xs pull-right pp-delete">X</div>
             </div>
             <div class="panel-body">
-                <a target="_blank" href="{{line[0].replace('m.', '')}}">{{line[3]}}</a>
+                <a target="_blank" href="http://douban.com/group/topic/{{line[0]}}">{{line[3]}}</a>
             </div>
         </div>
         {% end %}
