@@ -8,7 +8,7 @@ c = MongoClient('127.0.0.1').pick
 
 with open('target_info', 'r') as fp:
     for line in fp:
-        split_line = line.split('\t')
+        split_line = line[:-1].split('\t')
 
         if len(split_line) == 5:
             ts = split_line[4]
@@ -29,7 +29,7 @@ with open('target_info', 'r') as fp:
 
 with open('user_area', 'r') as fp:
     for line in fp:
-        split_line = line.split('\t')
+        split_line = line[:-1].split('\t')
 
         if len(split_line) != 2:
             continue
@@ -44,7 +44,7 @@ with open('user_area', 'r') as fp:
 
 with open('visited_topic', 'r') as fp:
     for line in fp:
-        split_line = line.split('\t')
+        split_line = line[:-1].split('\t')
 
         if len(split_line) != 2:
             continue
@@ -55,4 +55,12 @@ with open('visited_topic', 'r') as fp:
         c.visited_topic.insert({
             'topic_id': topic_id,
             'topic_title': topic_title
+        })
+
+with open('deny_id', 'r') as fp:
+    for line in fp:
+        deny_id = line[:-1]
+
+        c.deny_id.insert({
+            'deny_id': deny_id
         })
