@@ -8,6 +8,8 @@ import tornado.web
 from pymongo import MongoClient
 import pymongo
 
+LIMIT_DEFAULT = 50
+
 
 class MongoHandler(tornado.web.RequestHandler):
     def get_all_topic(self, keyword, limit):
@@ -31,14 +33,14 @@ class MongoHandler(tornado.web.RequestHandler):
 
 class MongoPepperHandler(MongoHandler):
     def get(self):
-        limit = int(self.get_argument('limit', 20))
+        limit = int(self.get_argument('limit', LIMIT_DEFAULT))
         lines = self.get_all_topic(u'上海', limit)
         self.render('home.html', lines=lines)
 
 
 class MongoAllHandler(MongoHandler):
     def get(self, area):
-        limit = int(self.get_argument('limit', 20))
+        limit = int(self.get_argument('limit', LIMIT_DEFAULT))
         lines = self.get_all_topic(area, limit)
         self.render('home.html', lines=lines)
 
