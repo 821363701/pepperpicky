@@ -11,6 +11,5 @@ function( curr, result ) {
 '''
 
 
-for i in c.user_area.group(['people_area'], None, {'total': 0}, reduce=func):
-    if i['total'] > 1000:
-        print u'{}\t{}'.format(i['total'], i['people_area'])
+for i in c.all_topic.group(['keyword'], None, {'total': 0}, reduce=func):
+    print u'{}\t{}'.format(i['total'], i['keyword'])

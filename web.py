@@ -8,6 +8,13 @@ from pymongo import MongoClient
 import pymongo
 
 
+func = '''
+function( curr, result ) {
+     result.total += 1;
+ }
+'''
+
+
 class MongoHomeHandler(tornado.web.RequestHandler):
     def get(self):
         limit = int(self.get_argument('limit', 20))
@@ -61,6 +68,31 @@ class MongoHistoryHandler(tornado.web.RequestHandler):
         self.render('home.html', lines=lines)
 
 
+class MongoIndexHandler(tornado.web.RequestHandler):
+    def get(self):
+        result = []
+        for i in self.application.c.all_topic.group(['keyword'], None, {'total': 0}, reduce=func):
+            result.append(i)
+
+        result = sorted(result, key=lambda r: r['total'])
+        result.reverse()
+
+        self.render('index.html', result=result[:20])
+
+
+class MongoAllHandler(tornado.web.RequestHandler):
+    def get(self, area):
+        limit = int(self.get_argument('limit', 20))
+
+        lines = []
+        for l in self.application.c.all_topic.find({
+            'keyword': area
+        }, limit=limit).sort('_id', pymongo.DESCENDING):
+            lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp']])
+
+        self.render('home.html', lines=lines)
+
+
 class Application(tornado.web.Application):
     def __init__(self):
         settings = dict(
@@ -69,6 +101,8 @@ class Application(tornado.web.Application):
         )
 
         _handlers = [
+            (r"/", MongoIndexHandler),
+            (r"/all/(.*)", MongoAllHandler),
             (r"/pepper", MongoHomeHandler),
             (r"/search", MongoSearchHandler),
             (r"/history", MongoHistoryHandler),

@@ -169,12 +169,12 @@ class Picker(object):
                 count_deny += 1
                 continue
 
-            people_area = self.c.user_area.find_one({
-                'people_id': founder_url_unique_id
-            })
-            if people_area and people_area['people_area'] not in target_area:
-                count_not_target_area_before += 1
-                continue
+            # people_area = self.c.user_area.find_one({
+            #     'people_id': founder_url_unique_id
+            # })
+            # if people_area and people_area['people_area'] not in target_area:
+            #     count_not_target_area_before += 1
+            #     continue
 
             # title contain key word
 
@@ -261,13 +261,14 @@ class Picker(object):
         self.check_group = False
 
         while True:
-            try:
-                self.__search_in_group_topics(self.__get_latest_topic_list())
-                #self.__search_in_group_topics(self.__get_group_list('516876'))
-            except Exception, e:
-                logging.error(e)
-                send_mail(str(e))
-                time.sleep(60)
+            self.__search_in_group_topics(self.__get_latest_topic_list())
+            # try:
+            #     self.__search_in_group_topics(self.__get_latest_topic_list())
+            #     #self.__search_in_group_topics(self.__get_group_list('516876'))
+            # except Exception, e:
+            #     logging.error(e)
+            #     send_mail(str(e))
+            #     time.sleep(60)
 
 if __name__ == '__main__':
     p = Picker()
