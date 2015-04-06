@@ -6,7 +6,6 @@ from BeautifulSoup import BeautifulSoup
 import time
 from datetime import datetime
 import logging
-import random
 import smtplib
 from email.mime.text import MIMEText
 from pymongo import MongoClient
@@ -14,9 +13,6 @@ from const import *
 
 logging.basicConfig(filename='picker.log', level=logging.INFO)
 
-key_word = [u'上海', u'魔都']
-target_area = [u'上海']
-watch_group = ['139316', '294565', '274483', '331631', '258401', '59335', '233931']
 session = '?id=27729491&session=d4a63410c4cf668feb8ec8fa73ec95db1c19cefc'
 t = 'viewed="6998797"; bid="n49InUGYqvg"; ll="108296"; dp=1; _ga=GA1.2.2098189400.1390826620; __utmt=1; ap=1; ps=y; ue="doubanxiong@live.cn"; dbcl2="27729491:o75dit0+w+g"; ck="6--W"; push_noty_num=0; push_doumail_num=3; __utma=30149280.2098189400.1390826620.1425542831.1425547321.50; __utmb=30149280.24.9.1425547406801; __utmc=30149280; __utmz=30149280.1425542831.49.16.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmv=30149280.2772; mbid=eb497e49; mdbs=295ed83cfb11ebaa7c1c88b6f135c2fe:9a657a1c1255e146:27729491'
 
@@ -34,23 +30,12 @@ def send_mail(text):
     s.quit()
 
 
-def contain_keyword(content):
-    for key in key_word:
-        if content.find(key) > -1:
-            return key
-    return None
-
-
-def print_open(url, title):
-    print u'{} - {}'.format(url, title)
-
-
 class Picker(object):
     def __init__(self):
         self.c = MongoClient('121.199.5.143').pick
 
-        self.check_group = True
-        self.sleep_time = 10
+        self.check_group = False
+        self.sleep_time = 1
 
         self.cookies = dict()
         cs = t.split(';')
@@ -59,28 +44,6 @@ class Picker(object):
             self.cookies[parts[0]] = parts[1]
 
         self.fetch_last_ts = time.time()
-
-    def __append_user_area(self, url, area):
-        u_url = unicode(url)
-        u_area = unicode(area)
-
-        self.c.user_area.insert({
-            'people_id': u_url[8:-6],
-            'people_area': u_area
-        })
-
-    def __append_target_info(self, url, area, founder_url, title):
-        topic_id = url.split('topic')[1][1:-1]
-        founder_id = founder_url[8:-6]
-
-        self.c.target_info.insert({
-            'topic_id': topic_id,
-            'topic_title': title,
-            'keyword': area,
-            'founder_id': founder_id,
-            'timestamp': str(time.time()),
-            'source': SOURCE_DOUBAN,
-        })
 
     def __append_all_topic(self, url, area, founder_url, title):
         topic_id = url.split('topic')[1][1:-1]
@@ -113,24 +76,15 @@ class Picker(object):
 
     def __search_in_group_topics(self, topics):
         count_total = len(topics)
-        count_group = 0
         count_visited = 0
-        count_not_target_area_before = 0
-        count_not_target_area = 0
         count_deny = 0
-        count_keyword_open = 0
-        count_target_area = 0
+        count_save = 0
 
         for item in topics:
             if self.check_group:
-                # check if group is target group
-
+                # todo use group to filter
                 belong_group = item.contents[3].contents[1].attrs[0][1]
-
                 belong_group_id = belong_group.split('?')[0][7:-1]
-                if belong_group_id not in watch_group:
-                    count_group += 1
-                    continue
 
             # check if link is visited
 
@@ -155,9 +109,12 @@ class Picker(object):
             rr = self.__fetch(hot_url)
             soup = BeautifulSoup(rr.text)
 
-            # check if founder is not target area
+            # check if founder is denied
 
             founder = soup.find('a', {'class': 'founder'})
+            if not founder:
+                # may be the topic is removed
+                continue
             founder_url = founder.attrs[0][1].replace('groups', 'about')
             founder_url_unique = founder_url.split('?')[0]
 
@@ -169,26 +126,10 @@ class Picker(object):
                 count_deny += 1
                 continue
 
-            # people_area = self.c.user_area.find_one({
-            #     'people_id': founder_url_unique_id
-            # })
-            # if people_area and people_area['people_area'] not in target_area:
-            #     count_not_target_area_before += 1
-            #     continue
-
-            # title contain key word
-
             content = soup.find('div', {'class': 'entry item'})
             title = content.previous.previous
 
-            title_keyword = contain_keyword(title)
-            if title_keyword:
-                self.__append_target_info(hot_url_unique, title_keyword, founder_url_unique, title)
-                print_open(hot_url.replace('m.', ''), title)
-                count_keyword_open += 1
-                continue
-
-            # check if user is in target area
+            # save the topic
 
             rrr = self.__fetch('http://m.douban.com'+founder_url)
             soup = BeautifulSoup(rrr.text)
@@ -196,26 +137,15 @@ class Picker(object):
 
             if founder_info and len(founder_info.contents) > 6:
                 founder_area = unicode(founder_info.contents[6].strip())
-
-                if founder_area in target_area:
-                    self.__append_target_info(hot_url_unique, founder_area, founder_url_unique, title)
-                    print_open(hot_url.replace('m.', ''), title)
-                    count_target_area += 1
-                else:
-                    count_not_target_area += 1
-
-                self.__append_all_topic(hot_url_unique, founder_area, founder_url_unique, title)
-                self.__append_user_area(founder_url_unique, founder_area)
             else:
                 # no location
-                count_not_target_area += 1
+                founder_area = 'None'
 
-                self.__append_all_topic(hot_url_unique, u'None', founder_url_unique, title)
-                self.__append_user_area(founder_url_unique, u'None')
+            self.__append_all_topic(hot_url_unique, founder_area, founder_url_unique, title)
+            count_save += 1
 
-        l = '[total: {} group: -{} visited: -{} area: -{} areab: -{} deny: -{}] = [keyword: {} area: {}] - {}'.format(
-            count_total, count_group, count_visited, count_not_target_area, count_not_target_area_before, count_deny,
-            count_keyword_open, count_target_area, datetime.now().strftime('%Y%m%d %H:%M:%S'))
+        l = '[total: {} visited: -{} deny: -{}] = [save: {}] - {}'.format(
+            count_total, count_visited, count_deny, count_save, datetime.now().strftime('%Y%m%d %H:%M:%S'))
         print l
         logging.info(l)
 

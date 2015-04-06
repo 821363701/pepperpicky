@@ -1,3 +1,4 @@
+# coding=utf-8
 __author__ = 'yuxizhou'
 
 import os
@@ -15,12 +16,14 @@ function( curr, result ) {
 '''
 
 
-class MongoHomeHandler(tornado.web.RequestHandler):
+class MongoPepperHandler(tornado.web.RequestHandler):
     def get(self):
         limit = int(self.get_argument('limit', 20))
 
         lines = []
-        for l in self.application.c.target_info.find({}, limit=limit).sort('_id', pymongo.DESCENDING):
+        for l in self.application.c.all_topic.find({
+            'keyword': u'上海',
+        }, limit=limit).sort('_id', pymongo.DESCENDING):
             lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp']])
 
         self.render('home.html', lines=lines)
@@ -32,7 +35,7 @@ class MongoDenyHandler(tornado.web.RequestHandler):
             'deny_id': deny_id
         })
 
-        self.application.c.target_info.remove({
+        self.application.c.all_topic.remove({
             'founder_id': deny_id
         })
 
@@ -47,7 +50,7 @@ class MongoSearchHandler(tornado.web.RequestHandler):
         query = self.get_argument('q')
 
         lines = []
-        for l in self.application.c.target_info.find({
+        for l in self.application.c.all_topic.find({
             'founder_id': query
         }).sort('_id', pymongo.DESCENDING):
             lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp']])
@@ -60,7 +63,7 @@ class MongoHistoryHandler(tornado.web.RequestHandler):
         query = self.get_argument('q')
 
         lines = []
-        for l in self.application.c.target_info.find({
+        for l in self.application.c.all_topic.find({
             'founder_id': query
         }).sort('_id', pymongo.DESCENDING):
             lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp']])
@@ -68,7 +71,7 @@ class MongoHistoryHandler(tornado.web.RequestHandler):
         self.render('home.html', lines=lines)
 
 
-class MongoIndexHandler(tornado.web.RequestHandler):
+class MongoHomeHandler(tornado.web.RequestHandler):
     def get(self):
         result = []
         for i in self.application.c.all_topic.group(['keyword'], None, {'total': 0}, reduce=func):
@@ -77,7 +80,7 @@ class MongoIndexHandler(tornado.web.RequestHandler):
         result = sorted(result, key=lambda r: r['total'])
         result.reverse()
 
-        self.render('index.html', result=result[:20])
+        self.render('index.html', result=result)
 
 
 class MongoAllHandler(tornado.web.RequestHandler):
@@ -101,9 +104,9 @@ class Application(tornado.web.Application):
         )
 
         _handlers = [
-            (r"/", MongoIndexHandler),
+            (r"/", MongoHomeHandler),
             (r"/all/(.*)", MongoAllHandler),
-            (r"/pepper", MongoHomeHandler),
+            (r"/pepper", MongoPepperHandler),
             (r"/search", MongoSearchHandler),
             (r"/history", MongoHistoryHandler),
 
