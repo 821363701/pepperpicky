@@ -16,20 +16,41 @@ function( curr, result ) {
 '''
 
 
-class MongoPepperHandler(tornado.web.RequestHandler):
-    def get(self):
-        limit = int(self.get_argument('limit', 20))
-
+class MongoHandler(tornado.web.RequestHandler):
+    def get_all_topic(self, keyword, limit):
         lines = []
         for l in self.application.c.all_topic.find({
-            'keyword': u'上海',
+            'keyword': keyword,
         }, limit=limit).sort('_id', pymongo.DESCENDING):
             lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp']])
 
+        return lines
+
+    def get_history(self, q):
+        lines = []
+        for l in self.application.c.all_topic.find({
+            'founder_id': q
+        }).sort('_id', pymongo.DESCENDING):
+            lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp']])
+
+        return lines
+
+
+class MongoPepperHandler(MongoHandler):
+    def get(self):
+        limit = int(self.get_argument('limit', 20))
+        lines = self.get_all_topic(u'上海', limit)
         self.render('home.html', lines=lines)
 
 
-class MongoDenyHandler(tornado.web.RequestHandler):
+class MongoAllHandler(MongoHandler):
+    def get(self, area):
+        limit = int(self.get_argument('limit', 20))
+        lines = self.get_all_topic(area, limit)
+        self.render('home.html', lines=lines)
+
+
+class MongoDenyHandler(MongoHandler):
     def get(self, deny_id):
         self.application.c.deny_id.insert({
             'deny_id': deny_id
@@ -42,36 +63,24 @@ class MongoDenyHandler(tornado.web.RequestHandler):
         self.write('0')
 
 
-class MongoSearchHandler(tornado.web.RequestHandler):
+class MongoSearchHandler(MongoHandler):
     def get(self):
         self.render('search.html')
 
     def post(self):
         query = self.get_argument('q')
-
-        lines = []
-        for l in self.application.c.all_topic.find({
-            'founder_id': query
-        }).sort('_id', pymongo.DESCENDING):
-            lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp']])
-
+        lines = self.get_history(query)
         self.render('home.html', lines=lines)
 
 
-class MongoHistoryHandler(tornado.web.RequestHandler):
+class MongoHistoryHandler(MongoHandler):
     def get(self):
         query = self.get_argument('q')
-
-        lines = []
-        for l in self.application.c.all_topic.find({
-            'founder_id': query
-        }).sort('_id', pymongo.DESCENDING):
-            lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp']])
-
+        lines = self.get_history(query)
         self.render('home.html', lines=lines)
 
 
-class MongoHomeHandler(tornado.web.RequestHandler):
+class MongoHomeHandler(MongoHandler):
     def get(self):
         result = []
         for i in self.application.c.all_topic.group(['keyword'], None, {'total': 0}, reduce=func):
@@ -81,19 +90,6 @@ class MongoHomeHandler(tornado.web.RequestHandler):
         result.reverse()
 
         self.render('index.html', result=result)
-
-
-class MongoAllHandler(tornado.web.RequestHandler):
-    def get(self, area):
-        limit = int(self.get_argument('limit', 20))
-
-        lines = []
-        for l in self.application.c.all_topic.find({
-            'keyword': area
-        }, limit=limit).sort('_id', pymongo.DESCENDING):
-            lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp']])
-
-        self.render('home.html', lines=lines)
 
 
 class Application(tornado.web.Application):
