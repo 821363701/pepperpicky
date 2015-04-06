@@ -9,13 +9,6 @@ from pymongo import MongoClient
 import pymongo
 
 
-func = '''
-function( curr, result ) {
-     result.total += 1;
- }
-'''
-
-
 class MongoHandler(tornado.web.RequestHandler):
     def get_all_topic(self, keyword, limit):
         lines = []
@@ -80,13 +73,34 @@ class MongoHistoryHandler(MongoHandler):
         self.render('home.html', lines=lines)
 
 
+pipeline = [
+    {
+        '$sort': {
+            '_id': -1
+        }
+    },
+    {
+        '$limit': 1000
+    },
+    {
+        "$group": {
+            "_id": "$keyword",
+            "count": {
+                "$sum": 1
+            }
+        }
+    }
+]
+
+
 class MongoHomeHandler(MongoHandler):
     def get(self):
         result = []
-        for i in self.application.c.all_topic.group(['keyword'], None, {'total': 0}, reduce=func):
+
+        for i in self.application.c.all_topic.aggregate(pipeline)['result']:
             result.append(i)
 
-        result = sorted(result, key=lambda r: r['total'])
+        result = sorted(result, key=lambda r: r['count'])
         result.reverse()
 
         self.render('index.html', result=result)

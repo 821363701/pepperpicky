@@ -14,9 +14,9 @@
     <div class="container" style="padding-top: 20px">
         <ul class="list-group">
         {% for i in result %}
-            <a class="list-group-item" href="/all/{{i['keyword']}}" target="_blank">
-                <span class="badge">{{int(i['total'])}}</span>
-                {{i['keyword']}}
+            <a class="list-group-item" href="/all/{{i['_id']}}" target="_blank">
+                <span class="badge">{{int(i['count'])}}</span>
+                {{i['_id']}}
             </a>
         {% end %}
         </ul>
