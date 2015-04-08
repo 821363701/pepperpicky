@@ -76,7 +76,7 @@ class Picker(object):
         start = time.time()
         result = requests.get(url, cookies=self.cookies)
         inter = time.time() - start
-        logging.info('this request cost {}s'.format(inter))
+        logging.info('{} request cost {}s'.format(url.split('?')[0], inter))
         return result
 
     def __search_in_group_topics(self, topics):
