@@ -72,7 +72,12 @@ class Picker(object):
             time.sleep(0.5)
 
         self.fetch_last_ts = time.time()
-        return requests.get(url, cookies=self.cookies)
+
+        try:
+            result = requests.get(url, cookies=self.cookies, timeout=10)
+        except:
+            result = requests.get(url, cookies=self.cookies)
+        return result
 
     def __search_in_group_topics(self, topics):
         count_total = len(topics)
