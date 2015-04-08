@@ -74,7 +74,10 @@ class Picker(object):
         self.fetch_last_ts = time.time()
 
         start = time.time()
-        result = requests.get(url, cookies=self.cookies)
+        try:
+            result = requests.get(url, cookies=self.cookies, timeout=10)
+        except:
+            result = requests.get(url, cookies=self.cookies)
         inter = time.time() - start
         logging.info('{} request cost {}s'.format(url, inter))
         return result
@@ -156,7 +159,7 @@ class Picker(object):
 
     def __get_latest_topic_list(self):
         result = []
-        for i in range(1, 5):
+        for i in range(1, 4):
             url_group = 'http://m.douban.com/group/topics'
 
             r = self.__fetch(url_group + session + '&page=' + str(i))
@@ -203,8 +206,12 @@ class Picker(object):
                 logging.error(e)
                 send_mail(str(e))
 
+    def fetch(self, url):
+        return self.__fetch(url)
+
 if __name__ == '__main__':
     p = Picker()
     p.start_ex()
+
     # p.start_latest()
     # p.start_group('139316')
