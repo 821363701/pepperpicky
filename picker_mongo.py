@@ -6,28 +6,14 @@ from BeautifulSoup import BeautifulSoup
 import time
 from datetime import datetime
 import logging
-import smtplib
-from email.mime.text import MIMEText
 from pymongo import MongoClient
 from const import *
+from utils import send_mail
 
 logging.basicConfig(filename='picker.log', level=logging.INFO)
 
 session = '?id=27729491&session=d4a63410c4cf668feb8ec8fa73ec95db1c19cefc'
 t = 'viewed="6998797"; bid="n49InUGYqvg"; ll="108296"; dp=1; _ga=GA1.2.2098189400.1390826620; __utmt=1; ap=1; ps=y; ue="doubanxiong@live.cn"; dbcl2="27729491:o75dit0+w+g"; ck="6--W"; push_noty_num=0; push_doumail_num=3; __utma=30149280.2098189400.1390826620.1425542831.1425547321.50; __utmb=30149280.24.9.1425547406801; __utmc=30149280; __utmz=30149280.1425542831.49.16.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmv=30149280.2772; mbid=eb497e49; mdbs=295ed83cfb11ebaa7c1c88b6f135c2fe:9a657a1c1255e146:27729491'
-
-
-def send_mail(text):
-    msg = MIMEText(text)
-    msg['Subject'] = 'pepper message'
-
-    msg['From'] = '821363701@qq.com'
-    msg['To'] = '821363701@qq.com'
-
-    s = smtplib.SMTP_SSL('smtp.exmail.qq.com')
-    s.login('821363701@qq.com', '821363701pepper')
-    s.sendmail('821363701@qq.com', ['821363701@qq.com'], msg.as_string())
-    s.quit()
 
 
 class Picker(object):
