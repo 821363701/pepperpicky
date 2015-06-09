@@ -14,6 +14,7 @@ STOCK_SH = 'sh000001'
 
 class Stock(object):
     def __init__(self):
+        self.sleep_time = 5
         self.price_count = 10
         self.price_list = []
         self.current_status = ''
@@ -24,17 +25,17 @@ class Stock(object):
         price = r.text.split(',')
         return float(price[1]), float(price[2]), float(price[3]), float(price[4]), float(price[5])
 
-    def __judge_stock_price(self):
-        diff = self.price_list[0] - self.price_list[-1]
+    def __judge(self, rate, line):
+        title = '{}% {}'.format(str(rate)[:5], self.current_status)
+        logging.info(title)
+        if abs(rate) > line:
+            send_mail(title)
 
-        forward = '+'
-        if diff < 0:
-            diff = -diff
-            forward = '-'
-
+    def __judge_by_diff(self):
+        diff = self.price_list[-1] - self.price_list[0]
         rate = diff / self.price_list[0]
-        if rate > 0.001:
-            send_mail('{}{}%'.format(forward, str(rate*100)[:5]))
+
+        self.__judge(rate, 0.1)
 
     def __judge_by_average(self):
         total = 0.0
@@ -43,22 +44,15 @@ class Stock(object):
         avg = total / len(self.price_list)
 
         diff = self.price_list[-1] - avg
-
-        forward = '+'
-        if diff < 0:
-            diff = -diff
-            forward = '-'
-
         rate = diff / avg * 100
-        logging.info('{}{}% {}'.format(forward, str(rate)[:5], self.current_status))
-        if rate > 0.1:
-            send_mail('{}{}% {}'.format(forward, str(rate)[:5], self.current_status))
+
+        self.__judge(rate, 0.1)
 
     def start(self):
         while True:
             try:
                 hour = datetime.now().hour
-                if 9 < hour < 12 or 13 < hour < 15:
+                if 9 < hour < 13 or 13 < hour < 15:
                     (today, yesterday, current, high, low) = self.__get_stock_price(STOCK_SH)
 
                     if len(self.price_list) == self.price_count:
@@ -72,7 +66,7 @@ class Stock(object):
             except Exception, e:
                 logging.error(e)
             finally:
-                time.sleep(5)
+                time.sleep(self.sleep_time)
 
     def test(self):
         self.price_list = [5131.881, 5131.881, 5131.881, 5131.881, 5000.425]
