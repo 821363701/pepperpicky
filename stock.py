@@ -6,21 +6,21 @@ import time
 from datetime import datetime
 from utils import send_mail
 
-logging.basicConfig(filename='stock.log', level=logging.INFO)
+# logging.basicConfig(filename='stock.log', level=logging.INFO)
 
-URL = 'http://apis.baidu.com/apistore/stockservice/stock?stockid=sh000001'
+TEMPLATE_URL = 'http://hq.sinajs.cn/etag.php?_=0.9219840362202376&list={}'
+STOCK_SH = 'sh000001'
+STOCK_ZCJK = 'sz002657'
 
 
 class Stock(object):
     def __init__(self):
         self.five_price = []
 
-    def __get_stock_price(self):
-        r = requests.get(URL, headers={
-            "apikey": "b6c534ca395655349ec1ae49e774a3e1"
-        })
+    def __get_stock_price(self, stock):
+        r = requests.get(TEMPLATE_URL.format(stock))
 
-        return r.json()['retData']['stockinfo']['currentPrice']
+        return float(r.text.split(',')[3])
 
     def __judge_stock_price(self):
         diff = self.five_price[0] - self.five_price[4]
@@ -34,7 +34,10 @@ class Stock(object):
             try:
                 hour = datetime.now().hour
                 if 9 < hour < 12 or 13 < hour < 15:
-                    price = self.__get_stock_price()
+                    price = self.__get_stock_price(STOCK_SH)
+
+                    print price
+
                     if len(self.five_price) < 5:
                         self.five_price.append(price)
                     else:
