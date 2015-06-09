@@ -6,11 +6,10 @@ import time
 from datetime import datetime
 from utils import send_mail
 
-# logging.basicConfig(filename='stock.log', level=logging.INFO)
+logging.basicConfig(filename='stock.log', level=logging.INFO)
 
 TEMPLATE_URL = 'http://hq.sinajs.cn/etag.php?_=0.9219840362202376&list={}'
 STOCK_SH = 'sh000001'
-STOCK_ZCJK = 'sz002657'
 
 
 class Stock(object):
@@ -32,7 +31,6 @@ class Stock(object):
             forward = '-'
 
         rate = diff / self.price_list[0]
-        print rate
         if rate > 0.001:
             send_mail('{}{}%'.format(forward, str(rate*100)[:5]))
 
@@ -50,7 +48,6 @@ class Stock(object):
             forward = '-'
 
         rate = diff / self.price_list[0] * 100
-        print forward + str(rate)
         if rate > 0.1:
             send_mail('{}{}%'.format(forward, str(rate)[:5]))
 
