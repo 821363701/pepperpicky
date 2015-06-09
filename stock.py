@@ -48,6 +48,7 @@ class Stock(object):
             forward = '-'
 
         rate = diff / self.price_list[0] * 100
+        logging.info('{}{}%'.format(forward, str(rate)[:5]))
         if rate > 0.1:
             send_mail('{}{}%'.format(forward, str(rate)[:5]))
 
