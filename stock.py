@@ -65,7 +65,7 @@ class Stock(object):
                         self.price_list.pop(0)
 
                     self.price_list.append(current)
-                    self.current_status = str((current - yesterday)/yesterday * 100) + '%'
+                    self.current_status = str((current - yesterday)/yesterday * 100)[:6] + '%'
                     self.__judge_by_average()
                 else:
                     self.price_list = []
