@@ -19,15 +19,21 @@ class Stock(object):
 
     def __get_stock_price(self, stock):
         r = requests.get(TEMPLATE_URL.format(stock))
-
+        # today, yesterday, current, high, low
         return float(r.text.split(',')[3])
 
     def __judge_stock_price(self):
-        diff = self.five_price[0] - self.five_price[4]
-        if diff > 0:
-            rate = diff / self.five_price[0]
-            if rate > 0.005:
-                send_mail('-' + str(rate*100)[:5] + '%')
+        diff = self.five_price[0] - self.five_price[-1]
+
+        forward = '+'
+        if diff < 0:
+            diff = -diff
+            forward = '-'
+
+        rate = diff / self.five_price[0]
+        print rate
+        if rate > 0.001:
+            send_mail('{}{}%'.format(forward, str(rate*100)[:5]))
 
     def start(self):
         while True:
@@ -38,13 +44,11 @@ class Stock(object):
 
                     print price
 
-                    if len(self.five_price) < 5:
-                        self.five_price.append(price)
-                    else:
+                    if len(self.five_price) == 5:
                         self.five_price.pop(0)
-                        self.five_price.append(price)
 
-                        self.__judge_stock_price()
+                    self.five_price.append(price)
+                    self.__judge_stock_price()
                 else:
                     self.five_price = []
             except Exception, e:
