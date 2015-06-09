@@ -16,11 +16,13 @@ class Stock(object):
     def __init__(self):
         self.price_count = 10
         self.price_list = []
+        self.current_status = ''
 
     def __get_stock_price(self, stock):
         r = requests.get(TEMPLATE_URL.format(stock))
         # today, yesterday, current, high, low
-        return float(r.text.split(',')[3])
+        price = r.text.split(',')
+        return float(price[1]), float(price[2]), float(price[3]), float(price[4]), float(price[5])
 
     def __judge_stock_price(self):
         diff = self.price_list[0] - self.price_list[-1]
@@ -48,21 +50,22 @@ class Stock(object):
             forward = '-'
 
         rate = diff / avg * 100
-        logging.info('{}{}%'.format(forward, str(rate)[:5]))
+        logging.info('{}{}% {}'.format(forward, str(rate)[:5], self.current_status))
         if rate > 0.1:
-            send_mail('{}{}%'.format(forward, str(rate)[:5]))
+            send_mail('{}{}% {}'.format(forward, str(rate)[:5], self.current_status))
 
     def start(self):
         while True:
             try:
                 hour = datetime.now().hour
                 if 9 < hour < 12 or 13 < hour < 15:
-                    price = self.__get_stock_price(STOCK_SH)
+                    (today, yesterday, current, high, low) = self.__get_stock_price(STOCK_SH)
 
                     if len(self.price_list) == self.price_count:
                         self.price_list.pop(0)
 
-                    self.price_list.append(price)
+                    self.price_list.append(current)
+                    self.current_status = str((current - yesterday)/yesterday * 100) + '%'
                     self.__judge_by_average()
                 else:
                     self.price_list = []
