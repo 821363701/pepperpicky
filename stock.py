@@ -11,8 +11,10 @@ logging.basicConfig(filename='stock.log', level=logging.INFO)
 
 TEMPLATE_URL = 'http://hq.sinajs.cn/etag.php?_=0.9219840362202376&list={}'
 STOCK_SH = 'sh000001'
+STOCK_SZ = 'sz399001'
 STOCK_002055 = 'sz002055'
 STOCK_002657 = 'sz002657'
+
 
 
 class Stock(object):
@@ -22,7 +24,7 @@ class Stock(object):
     def __init__(self, method=METHOD_AVG):
         if method == Stock.METHOD_AVG:
             self.__method_judge = self.__judge_by_average
-            self.judge_line = 0.05
+            self.judge_line = 0.1
         else:
             self.__method_judge = self.__judge_by_diff
             self.judge_line = 0.1
@@ -57,7 +59,7 @@ class Stock(object):
         while True:
             try:
                 hour = datetime.now().hour
-                if 9 < hour < 13 or 13 < hour < 15:
+                if 9 < hour < 12 or 13 < hour < 15:
                     (today, yesterday, current, high, low) = self.__get_stock_price(stock)
 
                     if len(self.price_list) == self.price_count:
@@ -79,5 +81,5 @@ class Stock(object):
 
 if __name__ == '__main__':
     p = Stock()
-    p.start(STOCK_SH)
+    p.start(STOCK_SZ)
     # p.test()
