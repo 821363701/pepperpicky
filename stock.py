@@ -81,5 +81,5 @@ class Stock(object):
 
 if __name__ == '__main__':
     p = Stock()
-    p.start(STOCK_SZ)
+    p.start(STOCK_SH)
     # p.test()

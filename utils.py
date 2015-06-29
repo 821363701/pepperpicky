@@ -9,9 +9,9 @@ def send_mail(text):
     msg['Subject'] = text
 
     msg['From'] = '821363701@qq.com'
-    msg['To'] = '821363701@qq.com'
+    msg['To'] = '821363701@qq.com, siqi.du@qq.com'
 
     s = smtplib.SMTP_SSL('smtp.qq.com')
     s.login('821363701@qq.com', '821363701pepper')
-    s.sendmail('821363701@qq.com', ['821363701@qq.com'], msg.as_string())
+    s.sendmail('821363701@qq.com', ['821363701@qq.com', 'siqi.du@qq.com'], msg.as_string())
     s.quit()
