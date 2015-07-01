@@ -9,7 +9,7 @@ import traceback
 from datetime import datetime
 from utils import send_mail
 
-logging.basicConfig(filename='stock.log', level=logging.INFO)
+logging.basicConfig(filename='stock.log', level=logging.INFO, format='%(asctime)-15s %(message)s')
 
 TEMPLATE_URL = 'http://hq.sinajs.cn/etag.php?_=0.9219840362202376&list={}'
 STOCK_SH = 'sh000001'
