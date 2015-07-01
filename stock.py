@@ -31,7 +31,7 @@ class Stock(object):
     def __init__(self, method=METHOD_AVG):
         if method == Stock.METHOD_AVG:
             self.__method_judge = self.__judge_by_average
-            self.judge_line = 0.1
+            self.judge_line = 0.8
         else:
             self.__method_judge = self.__judge_by_diff
             self.judge_line = 0.1
