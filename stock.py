@@ -18,9 +18,10 @@ STOCK_002055 = 'sz002055'
 STOCK_002657 = 'sz002657'
 
 STOCK = {
-    'sh000001': u'上证',
-    'sz002476': u'宝莫',
-    'sz000926': u'福星'
+    # 'sh000001': u'上证',
+    # 'sz002476': u'宝莫',
+    # 'sz000926': u'福星',
+    'sz000686': u'东北证券'
 }
 
 
@@ -31,7 +32,7 @@ class Stock(object):
     def __init__(self, method=METHOD_AVG):
         if method == Stock.METHOD_AVG:
             self.__method_judge = self.__judge_by_average
-            self.judge_line = 0.8
+            self.judge_line = 0.5
         else:
             self.__method_judge = self.__judge_by_diff
             self.judge_line = 0.1
