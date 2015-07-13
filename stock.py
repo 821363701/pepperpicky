@@ -9,7 +9,7 @@ import traceback
 from datetime import datetime
 from utils import send_mail
 
-logging.basicConfig(filename='stock.log', level=logging.INFO, format='%(asctime)-15s %(message)s')
+logging.basicConfig(filename='stock.log', level=logging.ERROR, format='%(asctime)-15s %(message)s')
 
 TEMPLATE_URL = 'http://hq.sinajs.cn/etag.php?_=0.9219840362202376&list={}'
 STOCK_SH = 'sh000001'
@@ -18,10 +18,10 @@ STOCK_002055 = 'sz002055'
 STOCK_002657 = 'sz002657'
 
 STOCK = {
-    # 'sh000001': u'上证',
-    # 'sz002476': u'宝莫',
-    # 'sz000926': u'福星',
-    'sz000686': u'东北证券'
+    # 'sh000001': u'SH',
+    # 'sz002476': u'BM',
+    # 'sz000926': u'FX',
+    'sz000686': u'DBZQ'
 }
 
 
@@ -53,8 +53,9 @@ class Stock(object):
         return float(price[1]), float(price[2]), float(price[3]), float(price[4]), float(price[5])
 
     def __judge(self, rate):
-        title = u'{}% {} {}'.format(str(rate)[:5], self.current_status, STOCK[self.current_stock])
-        logging.info(title)
+        title = u'[{}%] {} {} {}'.format(str(rate)[:5], self.price_single_list[self.current_stock][-1],
+                                         self.current_status, STOCK[self.current_stock])
+        logging.error(title)
         if abs(rate) > self.judge_line:
             send_mail(title.encode('utf-8'))
 
