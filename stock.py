@@ -20,7 +20,7 @@ STOCK_002657 = 'sz002657'
 STOCK = {
     # 'sh000001': u'SH',
     # 'sz002476': u'BM',
-    # 'sz000926': u'FX',
+    'sz000926': u'FX',
     'sz000686': u'DBZQ'
 }
 
@@ -35,7 +35,7 @@ class Stock(object):
             self.judge_line = 0.5
         else:
             self.__method_judge = self.__judge_by_diff
-            self.judge_line = 0.1
+            self.judge_line = 0.5
 
         self.sleep_time = 5
         self.price_count = 10
@@ -96,6 +96,6 @@ class Stock(object):
 
 
 if __name__ == '__main__':
-    p = Stock()
+    p = Stock(Stock.METHOD_DIFF)
     p.start()
     # p.test()
