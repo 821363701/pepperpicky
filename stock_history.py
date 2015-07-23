@@ -93,6 +93,8 @@ for prefix in stock_all:
                         })
         except:
             print 'except when {}'.format(stock_code)
+        finally:
+            r.close()
 
 
 
