@@ -71,11 +71,11 @@ for prefix in stock_all:
         stock_code = base_stock.format(pre, a) + '.' + where
         stock_api = base_api.format(stock_code, '05', '1', '2015', '06', '23', '2015')
 
-        print 'start load {} {}'.format(stock_code, str(datetime.now()))
-        r = requests.get(stock_api)
-        result = r.text
-
         try:
+            print 'start load {} {}'.format(stock_code, str(datetime.now()))
+            r = requests.get(stock_api)
+            result = r.text
+
             lines = result.split('\n')
             for line in lines[1:]:
                 if line:
