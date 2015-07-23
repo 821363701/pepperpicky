@@ -45,9 +45,11 @@ def is_exist(where, code):
 
     if len(r.text.split(',')) > 2:
         print '{} is exists'.format(code)
+        r.close()
         return True
     else:
         print '{} is NOT exists'.format(code)
+        r.close()
         return False
 
 
