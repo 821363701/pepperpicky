@@ -1,17 +1,38 @@
 __author__ = 'yu'
 
-# stock_code, first_day, first_open, first_close, last_day, last_open, last_close
+'''
+{
+    "_id" : ObjectId("55b0d687e694aa0dbaa6779d"),
+    "high" : 16.38,
+    "volume" : 120352700,
+    "low" : 16.15,
+    "date" : "2015-07-22",
+    "close" : 16.16,
+    "stock" : "600000.SS",
+    "open" : 16.33,
+    "adj" : 16.16
+}
 
-with open('a', 'r') as fp:
-    lines = fp.readlines()
+'''
 
-for line in lines:
-    parts = line.split('\t')
-    code = parts[0]
-    first_open = float(parts[2])
-    last_close = float(parts[6])
+from pymongo import MongoClient
+
+c = MongoClient('121.199.5.143').stock
+
+stocks = c.history.distinct('stock')
+
+for stock in stocks:
+    first_open = c.history.find_one({
+        'stock': stock,
+        'date': '2015-07-09'
+    })['open']
+
+    last_close = c.history.find_one({
+        'stock': stock,
+        'date': '2015-07-22'
+    })['close']
 
     rate = (last_close - first_open) / first_open * 100
 
-    if rate < 10:
-        print '{} {}%'.format(code, rate)
+    if rate < 10 and rate != 0.0:
+        print '{}  {}'.format(stock, rate)
