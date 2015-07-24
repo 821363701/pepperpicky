@@ -39,7 +39,7 @@
                 <div deny_id="{{line[2]}}" class="btn btn-danger btn-xs pull-right pp-delete">X</div>
             </div>
             <div class="panel-body">
-                <a target="_blank" href="http://douban.com/group/topic/{{line[0]}}">{{line[3]}}</a>
+                <a class="read" mid="{{line[5]}}" target="_blank" href="http://douban.com/group/topic/{{line[0]}}">{{line[3]}}</a>
             </div>
         </div>
         {% end %}
@@ -50,6 +50,13 @@
             $.get('/deny/'+$(this).attr('deny_id'), function(data){
             });
             $(this).parent().parent().hide();
+        });
+
+        $('.read').on('click', function(){
+            var target = $(this)
+            $.get('/read/'+$(this).attr('mid'), function(data){
+                target.parent().parent().hide();
+            });
         });
     </script>
 </body>

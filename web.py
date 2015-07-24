@@ -17,7 +17,7 @@ class MongoHandler(tornado.web.RequestHandler):
         for l in self.application.c.all_topic.find({
             'keyword': keyword,
         }, limit=limit).sort('_id', pymongo.DESCENDING):
-            lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp']])
+            lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp'], str(l['_id'])])
 
         return lines
 
@@ -26,7 +26,7 @@ class MongoHandler(tornado.web.RequestHandler):
         for l in self.application.c.all_topic.find({
             'founder_id': q
         }).sort('_id', pymongo.DESCENDING):
-            lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp']])
+            lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp'], str(l['_id'])])
 
         return lines
 
@@ -56,6 +56,11 @@ class MongoDenyHandler(MongoHandler):
         })
 
         self.write('0')
+
+
+class MongoReadHandler(MongoHandler):
+    def get(self, mid):
+        self.application.c.read.insert()
 
 
 class MongoSearchHandler(MongoHandler):
@@ -123,6 +128,7 @@ class Application(tornado.web.Application):
             (r"/history", MongoHistoryHandler),
 
             (r"/deny/(.*)", MongoDenyHandler),
+            (r"/read/(.*)", MongoReadHandler),
         ]
 
         tornado.web.Application.__init__(self, _handlers, **settings)

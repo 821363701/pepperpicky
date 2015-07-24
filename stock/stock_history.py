@@ -53,55 +53,65 @@ def is_exist(where, code):
         return False
 
 
-for prefix in stock_all:
-    for i in range(0, 1000):
-        a = str(i)
-        if len(a) == 1:
-            a = '00'+a
-        elif len(a) == 2:
-            a = '0'+a
-        elif len(a) == 3:
-            pass
-        else:
-            continue
+def get_history(pre, where, a):
+    if not is_exist(where, base_stock.format(pre, a)):
+        return
 
-        pre, where = prefix
+    stock_code = base_stock.format(pre, a) + '.' + where
+    stock_api = base_api.format(stock_code, '06', '24', '2015', '06', '24', '2015')
 
-        if not is_exist(where, base_stock.format(pre, a)):
-            continue
+    try:
+        print 'start load {} {}'.format(stock_code, str(datetime.now()))
+        r = requests.get(stock_api)
+        result = r.text
 
-        stock_code = base_stock.format(pre, a) + '.' + where
-        stock_api = base_api.format(stock_code, '06', '24', '2015', '06', '24', '2015')
-
-        try:
-            print 'start load {} {}'.format(stock_code, str(datetime.now()))
-            r = requests.get(stock_api)
-            result = r.text
-
-            lines = result.split('\n')
-            for line in lines[1:]:
-                if line:
-                    parts = line.split(',')
-                    if len(parts) >= 7:
-                        c.history.update({
-                            'date': parts[0],
-                            'stock': stock_code
-                        }, {
-                            'date': parts[0],
-                            'open': float(parts[1]),
-                            'high': float(parts[2]),
-                            'low': float(parts[3]),
-                            'close': float(parts[4]),
-                            'volume': float(parts[5]),
-                            'adj': float(parts[6]),
-                            'stock': stock_code
-                        }, upsert=True)
-        except:
-            print 'except when {}'.format(stock_code)
-        finally:
-            r.close()
+        lines = result.split('\n')
+        for line in lines[1:]:
+            if line:
+                parts = line.split(',')
+                if len(parts) >= 7:
+                    c.history.update({
+                        'date': parts[0],
+                        'stock': stock_code
+                    }, {
+                        'date': parts[0],
+                        'open': float(parts[1]),
+                        'high': float(parts[2]),
+                        'low': float(parts[3]),
+                        'close': float(parts[4]),
+                        'volume': float(parts[5]),
+                        'adj': float(parts[6]),
+                        'stock': stock_code
+                    }, upsert=True)
+    except:
+        print 'except when {}'.format(stock_code)
+    finally:
+        r.close()
 
 
+def get_all():
+    for prefix in stock_all:
+        for i in range(0, 1000):
+            a = str(i)
+            if len(a) == 1:
+                a = '00'+a
+            elif len(a) == 2:
+                a = '0'+a
+            elif len(a) == 3:
+                pass
+            else:
+                continue
 
+            pre, where = prefix
+
+            get_history(pre, where, a)
+
+
+def get_one(stock):
+    get_history(stock[:3], stock[-2:], stock[3:6])
+
+
+if __name__ == '__main__':
+    get_all()
 
 
