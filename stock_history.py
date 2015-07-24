@@ -71,7 +71,7 @@ for prefix in stock_all:
             continue
 
         stock_code = base_stock.format(pre, a) + '.' + where
-        stock_api = base_api.format(stock_code, '05', '1', '2015', '06', '23', '2015')
+        stock_api = base_api.format(stock_code, '06', '23', '2015', '06', '23', '2015')
 
         try:
             print 'start load {} {}'.format(stock_code, str(datetime.now()))
