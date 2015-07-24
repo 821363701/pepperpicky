@@ -53,12 +53,25 @@ def is_exist(where, code):
         return False
 
 
-def get_history(pre, where, a):
+def tran_date_month(month):
+    m = str(int(month) - 1)
+    if len(m) == 1:
+        return '0'+m
+    else:
+        return m
+
+
+def get_history(pre, where, a, date_from, date_to):
     if not is_exist(where, base_stock.format(pre, a)):
         return
 
     stock_code = base_stock.format(pre, a) + '.' + where
-    stock_api = base_api.format(stock_code, '06', '24', '2015', '06', '24', '2015')
+
+    date_from_parts = date_from.split('-')
+    date_to_parts = date_to.split('-')
+    stock_api = base_api.format(stock_code,
+                                tran_date_month(date_from_parts[1]), date_from_parts[2], date_from_parts[0],
+                                tran_date_month(date_to_parts[1]), date_to_parts[2], date_to_parts[0])
 
     try:
         print 'start load {} {}'.format(stock_code, str(datetime.now()))
@@ -83,10 +96,9 @@ def get_history(pre, where, a):
                         'adj': float(parts[6]),
                         'stock': stock_code
                     }, upsert=True)
+        r.close()
     except:
         print 'except when {}'.format(stock_code)
-    finally:
-        r.close()
 
 
 def get_all():
@@ -103,12 +115,13 @@ def get_all():
                 continue
 
             pre, where = prefix
+            date = '2015-07-24'
 
-            get_history(pre, where, a)
+            get_history(pre, where, a, date, date)
 
 
-def get_one(stock):
-    get_history(stock[:3], stock[-2:], stock[3:6])
+def get_one(stock, date):
+    get_history(stock[:3], stock[-2:], stock[3:6], date, date)
 
 
 if __name__ == '__main__':
