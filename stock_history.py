@@ -71,7 +71,7 @@ for prefix in stock_all:
             continue
 
         stock_code = base_stock.format(pre, a) + '.' + where
-        stock_api = base_api.format(stock_code, '06', '23', '2015', '06', '23', '2015')
+        stock_api = base_api.format(stock_code, '06', '24', '2015', '06', '24', '2015')
 
         try:
             print 'start load {} {}'.format(stock_code, str(datetime.now()))
@@ -83,7 +83,10 @@ for prefix in stock_all:
                 if line:
                     parts = line.split(',')
                     if len(parts) >= 7:
-                        c.history.insert({
+                        c.history.update({
+                            'date': parts[0],
+                            'stock': stock_code
+                        }, {
                             'date': parts[0],
                             'open': float(parts[1]),
                             'high': float(parts[2]),
@@ -92,7 +95,7 @@ for prefix in stock_all:
                             'volume': float(parts[5]),
                             'adj': float(parts[6]),
                             'stock': stock_code
-                        })
+                        }, upsert=True)
         except:
             print 'except when {}'.format(stock_code)
         finally:
