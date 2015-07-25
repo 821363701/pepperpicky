@@ -73,16 +73,21 @@ def find_sline():
 
 
 def find_rate():
+    rank = []
+
     for stock in stocks:
         try:
-            print stock
             first_open = get_stock_history_by_date(stock, '2015-07-09')['low']
             last_close = get_stock_history_by_date(stock, '2015-07-24')['close']
 
             r = rate(last_close, first_open)
-            print '{}  {}'.format(stock, r)
+            rank.append((stock, r))
         except:
             continue
+
+    ranked = sorted(rank, key=lambda r : r[1])
+    for rn, rr in ranked:
+        print '{}  {}'.format(rn, rr)
 
 
 if __name__ == '__main__':
