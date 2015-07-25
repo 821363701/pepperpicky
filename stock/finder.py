@@ -88,7 +88,7 @@ def find_rate():
     ranked = sorted(rank, key=lambda r : r[1])
     for rn, rr in ranked:
         name = get_stock_name_from_mongo(rn)
-        print '{} {} {}'.format(name, rn, rr)
+        print u'{} {} {}'.format(name, rn, rr)
 
 
 if __name__ == '__main__':
