@@ -15,19 +15,14 @@ __author__ = 'yu'
 
 '''
 
-from pymongo import MongoClient
-from util import get_stock_name_from_mongo, get_all_stock, get_stock_history_by_date, rate
+from util import get_stock_name_from_mongo, get_all_stock, get_stock_history_by_date, rate, get_stock_days, is_stop_now
 
-c = MongoClient('121.199.5.143').stock
 stocks = get_all_stock()
 
 
 def test():
     for stock in stocks:
-        day = c.history.find_one({
-            'stock': stock,
-            'date': '2015-07-24'
-        })
+        day = get_stock_history_by_date(stock, '2015-07-24')
 
         rate = (day['close'] - day['open']) / day['open'] * 100
         if abs(rate) > 9:
@@ -35,11 +30,57 @@ def test():
             print u'{} {} {}'.format(name, stock, rate)
 
 
+def count_avg_s_line():
+    all = []
+    for stock in stocks:
+        days = get_stock_days(stock)
+
+        if days.count() < 10:
+            continue
+
+        high = None
+        low = None
+        now = None
+
+        for day in days:
+            if (not high) or (high['high'] < day['high']):
+                high = day
+
+            if (not low) or (low['low'] > day['low']):
+                low = day
+
+            if day['date'] == "2015-07-24":
+                now = day
+
+        if high and low and now:
+            x = high['high'] - low['low']
+            y = now['close'] - low['low']
+            if y == 0.0 or x == 0.0:
+                continue
+
+            s = x / y
+
+            if s > 100.0:
+                continue
+
+            all.append((stock, s))
+        else:
+            print "error {}".format(stock)
+
+    ranked = sorted(all, key=lambda r: r[1])
+    count = 0.0
+    for stock, s in ranked:
+        print '{} {}'.format(s, stock)
+        count += s
+    print count/len(all)
+
+
 def find_sline():
     for stock in stocks:
-        days = c.history.find({
-            'stock': stock
-        })
+        days = get_stock_days(stock)
+
+        if days.count() < 10:
+            continue
 
         high = None
         low = None
@@ -59,15 +100,14 @@ def find_sline():
             high_rate = (high['high'] - now['close']) / now['close'] * 100
             low_rate = (now['close'] - low['low']) / low['low'] * 100
 
-            sline = low['low'] + (high['high'] - low['low']) / 8
+            s_line = low['low'] + (high['high'] - low['low']) / 8
 
-            if now['close'] < sline:
-                name = c.info.find_one({
-                    'stock': stock
-                })['name']
+            if now['close'] < s_line:
+                if is_stop_now(stock):
+                    continue
 
-                print u"{} {} -- {}({})[{}] {}[{}] {}({})[{}]".format(stock, name, high['high'], high_rate, high['date'],
-                                                    now['close'], now['date'], low['low'], low_rate, low['date'])
+                name = get_stock_name_from_mongo(stock)
+                print u"{} {} {}".format(s_line, stock, name)
         else:
             print "error {}".format(stock)
 
@@ -85,13 +125,14 @@ def find_rate():
         except:
             continue
 
-    ranked = sorted(rank, key=lambda r : r[1])
+    ranked = sorted(rank, key=lambda r: r[1])
     for rn, rr in ranked:
         name = get_stock_name_from_mongo(rn)
         print u'{} {} {}'.format(name, rn, rr)
 
 
 if __name__ == '__main__':
+    count_avg_s_line()
     # find_sline()
     # test()
-    find_rate()
+    # find_rate()

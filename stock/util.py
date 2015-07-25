@@ -23,6 +23,22 @@ def get_stock_name(stock):
     return name
 
 
+def is_stop_now(stock):
+    parts = stock.split('.')
+    if parts[1] == 'SS':
+        r = requests.get(sina_api.format('sh'+parts[0]))
+    else:
+        r = requests.get(sina_api.format('sz'+parts[0]))
+
+    result = r.text.split(',')
+
+    name = result[1] == '0.00'
+
+    r.close()
+
+    return name
+
+
 def get_stock_name_from_mongo(stock):
     return c.info.find_one({
         'stock': stock
@@ -31,6 +47,13 @@ def get_stock_name_from_mongo(stock):
 
 def get_all_stock():
     return c.history.distinct('stock')
+
+
+def get_stock_days(stock):
+    return c.history.find({
+        'stock': stock
+    })
+
 
 def get_stock_history_by_date(stock, date):
     result = c.history.find_one({
