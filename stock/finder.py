@@ -38,6 +38,8 @@ def count_avg_s_line():
         if days.count() < 10:
             continue
 
+
+
         high = None
         low = None
         now = None
@@ -60,7 +62,7 @@ def count_avg_s_line():
 
             s = x / y
 
-            if s > 100.0:
+            if s > 10.0:
                 continue
 
             all.append((stock, s))
