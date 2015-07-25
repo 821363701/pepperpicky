@@ -113,6 +113,15 @@ class MongoHomeHandler(MongoHandler):
         self.render('index.html', result=result)
 
 
+class StockHandler(tornado.web.RequestHandler):
+    def get(self, stock):
+        days = self.application.stock.history.find({
+            'stock': stock
+        })
+
+        self.render('stock.html', days=days)
+
+
 class Application(tornado.web.Application):
     def __init__(self):
         settings = dict(
@@ -129,11 +138,14 @@ class Application(tornado.web.Application):
 
             (r"/deny/(.*)", MongoDenyHandler),
             (r"/read/(.*)", MongoReadHandler),
+
+            (r"/stock/(.*)", StockHandler),
         ]
 
         tornado.web.Application.__init__(self, _handlers, **settings)
 
         self.c = MongoClient('121.199.5.143').pick
+        self.stock = MongoClient('121.199.5.143').stock
         self.c.visited_topic.ensure_index('topic_id')
 
 
