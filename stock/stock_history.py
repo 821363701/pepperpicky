@@ -36,7 +36,7 @@ c = MongoClient('121.199.5.143').stock
 
 sina_api = 'http://hq.sinajs.cn/etag.php?_=0.9219840362202376&list={}'
 base_api = 'http://ichart.yahoo.com/table.csv?s={}&a={}&b={}&c={}&d={}&e={}&f={}&g=d'
-stock_all = [('600', 'SS'), ('601', 'SS'), ('603', 'SS'), ('000', 'SZ')]
+stock_all = [('600', 'SS'), ('601', 'SS'), ('603', 'SS'), ('000', 'SZ'), ('002', 'SZ')]
 base_stock = '{}{}'
 
 
@@ -131,7 +131,25 @@ def get_many_day(stock, date_from, date_to):
     get_history(stock[:3], stock[-2:], stock[3:6], date_from, date_to)
 
 
+def get_002():
+    for i in range(0, 1000):
+        a = str(i)
+        if len(a) == 1:
+            a = '00'+a
+        elif len(a) == 2:
+            a = '0'+a
+        elif len(a) == 3:
+            pass
+        else:
+            continue
+
+        pre = '002'
+        where = 'SZ'
+
+        get_history(pre, where, a, '2015-06-01', '2015-07-24')
+
+
 if __name__ == '__main__':
-    get_all()
+    get_002()
 
 
