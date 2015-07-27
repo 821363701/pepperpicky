@@ -4,6 +4,7 @@ __author__ = 'yu'
 import requests
 from pymongo import MongoClient
 from datetime import datetime
+from util import get_stock_history_by_date
 
 '''
 请求地址
@@ -69,6 +70,10 @@ def get_history(pre, where, a, date_from, date_to):
         return
 
     stock_code = base_stock.format(pre, a) + '.' + where
+
+    is_saved = get_stock_history_by_date(stock_code, date_to)
+    if is_saved:
+        return
 
     date_from_parts = date_from.split('-')
     date_to_parts = date_to.split('-')
