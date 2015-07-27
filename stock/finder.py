@@ -148,8 +148,7 @@ def find_last_week_up_most():
 
     ranked = sorted(rank, key=lambda r: r[1])
     for rn, rr in ranked:
-        name = get_stock_name_from_mongo(rn)
-        print u'{} {} {}'.format(name, rn, rr)
+        print u'{} {}'.format(rn, rr)
 
 
 if __name__ == '__main__':
