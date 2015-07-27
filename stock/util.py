@@ -61,13 +61,6 @@ def get_stock_history_by_date(stock, date):
         'date': date
     })
 
-    if not result:
-        get_one(stock, date)
-        result = c.history.find_one({
-            'stock': stock,
-            'date': date
-        })
-
     return result
 
 
