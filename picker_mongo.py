@@ -12,9 +12,8 @@ from utils import send_mail
 
 logging.basicConfig(filename='picker.log', level=logging.INFO)
 
-session = '?id=27729491&session=d4a63410c4cf668feb8ec8fa73ec95db1c19cefc'
-t = 'viewed="6998797"; bid="n49InUGYqvg"; ll="108296"; dp=1; _ga=GA1.2.2098189400.1390826620; __utmt=1; ap=1; ps=y; ue="doubanxiong@live.cn"; dbcl2="27729491:o75dit0+w+g"; ck="6--W"; push_noty_num=0; push_doumail_num=3; __utma=30149280.2098189400.1390826620.1425542831.1425547321.50; __utmb=30149280.24.9.1425547406801; __utmc=30149280; __utmz=30149280.1425542831.49.16.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmv=30149280.2772; mbid=eb497e49; mdbs=295ed83cfb11ebaa7c1c88b6f135c2fe:9a657a1c1255e146:27729491'
-
+session = '?session=d4a63410c4cf668feb8ec8fa73ec95db1c19cefc'
+t = 'bid="AVRekjtmmtM"; ue="doubanxiong@live.cn"; __utma=30149280.984907948.1427943741.1433839006.1437377352.10; __utmc=30149280; __utmz=30149280.1437377352.10.6.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utmv=30149280.2772; _ga=GA1.2.984907948.1427943741; _gat=1; mbid=6c9a4af8; mdbs=295ed83cfb11ebaa7c1c88b6f135c2fe:9a657a1c1255e146:27729491; _pk_id.100001.043a=a83726c8cecc888f.1437986131.1.1437986220.1437986131.; _pk_ses.100001.043a=*'
 
 class Picker(object):
     def __init__(self):
@@ -82,7 +81,7 @@ class Picker(object):
             link = item.contents[1].attrs[0][1]
             topic_title = item.contents[1].text
 
-            hot_url = 'http://m.douban.com'+link
+            hot_url = 'http://wap.douban.com'+link
             hot_url_unique = hot_url.split('?')[0]
 
             hot_url_unique_id = hot_url_unique.split('/')[-2]
@@ -122,7 +121,7 @@ class Picker(object):
 
             # save the topic
 
-            rrr = self.__fetch('http://m.douban.com'+founder_url)
+            rrr = self.__fetch('http://wap.douban.com'+founder_url)
             soup = BeautifulSoup(rrr.text)
             founder_info = soup.find('div', {'class': 'info'})
 
@@ -143,7 +142,7 @@ class Picker(object):
     def __get_latest_topic_list(self):
         result = []
         for i in range(1, 4):
-            url_group = 'http://m.douban.com/group/topics'
+            url_group = 'http://wap.douban.com/group/topics'
 
             r = self.__fetch(url_group + session + '&page=' + str(i))
             soup = BeautifulSoup(r.text)
@@ -151,7 +150,7 @@ class Picker(object):
         return result
 
     def __get_group_list(self, gid):
-        r = self.__fetch('http://m.douban.com/group/'+gid+'/'+session)
+        r = self.__fetch('http://wap.douban.com/group/'+gid+'/'+session)
         soup = BeautifulSoup(r.text)
         return soup.findAll('div', {'class': 'item'})
 
