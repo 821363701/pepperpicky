@@ -2,7 +2,6 @@ __author__ = 'yuxizhou'
 
 import requests
 from pymongo import MongoClient
-from stock_history import get_one
 
 sina_api = 'http://hq.sinajs.cn/etag.php?_=0.9219840362202376&list={}'
 c = MongoClient('121.199.5.143').stock
@@ -66,5 +65,3 @@ def get_stock_history_by_date(stock, date):
 
 def rate(a, b):
     return (a - b) / b * 100
-
-# get_stock_name('600000.SS')
