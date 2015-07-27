@@ -134,8 +134,28 @@ def find_rate():
         print u'{} {} {}'.format(name, rn, rr)
 
 
+def find_last_week_up_most():
+    rank = []
+    for stock in stocks:
+        try:
+            first_open = get_stock_history_by_date(stock, '2015-07-20')['open']
+            last_close = get_stock_history_by_date(stock, '2015-07-24')['close']
+
+            r = rate(last_close, first_open)
+            rank.append((stock, r))
+        except:
+            continue
+
+    ranked = sorted(rank, key=lambda r: r[1])
+    for rn, rr in ranked:
+        name = get_stock_name_from_mongo(rn)
+        print u'{} {} {}'.format(name, rn, rr)
+
+
 if __name__ == '__main__':
-    count_avg_s_line()
+    # count_avg_s_line()
     # find_sline()
     # test()
     # find_rate()
+    find_last_week_up_most()
+
