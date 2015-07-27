@@ -138,7 +138,7 @@ def find_last_week_up_most():
     rank = []
     for stock in stocks:
         try:
-            first_open = get_stock_history_by_date(stock, '2015-07-20')['open']
+            first_open = get_stock_history_by_date(stock, '2015-07-17')['close']
             last_close = get_stock_history_by_date(stock, '2015-07-24')['close']
 
             r = rate(last_close, first_open)
