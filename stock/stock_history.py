@@ -65,15 +65,16 @@ def tran_date_month(month):
         return m
 
 
-def get_history(pre, where, a, date_from, date_to):
+def get_history(pre, where, a, date_from, date_to, con=False):
     if not is_exist(where, base_stock.format(pre, a)):
         return
 
     stock_code = base_stock.format(pre, a) + '.' + where
 
-    # is_saved = get_stock_history_by_date(stock_code, date_to)
-    # if is_saved:
-    #     return
+    if con:
+        is_saved = get_stock_history_by_date(stock_code, date_to)
+        if is_saved:
+            return
 
     date_from_parts = date_from.split('-')
     date_to_parts = date_to.split('-')
@@ -123,9 +124,9 @@ def get_all():
                 continue
 
             pre, where = prefix
-            date = '2015-07-24'
+            date = '2015-07-27'
 
-            get_history(pre, where, a, date, date)
+            get_history(pre, where, a, date, date, True)
 
 
 def get_one(stock, date):
@@ -155,6 +156,6 @@ def get_002():
 
 
 if __name__ == '__main__':
-    get_002()
+    get_all()
 
 
