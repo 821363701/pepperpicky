@@ -16,4 +16,4 @@ result = c.history.group(key={"stock": 1}, condition={}, initial={"count": 0}, r
 for doc in result:
     if doc['count'] != 40:
         print doc['stock']
-        # get_many_day(doc['stock'], '2015-06-01', '2015-07-24')
+        get_many_day(doc['stock'], '2015-06-01', '2015-07-24')
