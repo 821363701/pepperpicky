@@ -29,7 +29,7 @@ yahoo的api是国际性的，是支持国内沪深股市的，但代码稍微变
 深市A股票买卖的代码是以000打头
 
 curl 'http://ichart.yahoo.com/table.csv?s=601211.SS&a=05&b=01&c=2015&d=06&e=24&f=2015&g=d'
-curl 'http://ichart.yahoo.com/table.csv?s=601211.SS&a=06&b=27&c=2015&d=06&e=27&f=2015&g=d'
+curl 'http://ichart.yahoo.com/table.csv?s=601211.SS&a=06&b=28&c=2015&d=06&e=28&f=2015&g=d'
 
 '''
 
@@ -124,7 +124,7 @@ def get_all():
                 continue
 
             pre, where = prefix
-            date = '2015-07-27'
+            date = '2015-07-28'
 
             get_history(pre, where, a, date, date, True)
 
