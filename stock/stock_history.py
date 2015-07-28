@@ -71,9 +71,9 @@ def get_history(pre, where, a, date_from, date_to):
 
     stock_code = base_stock.format(pre, a) + '.' + where
 
-    is_saved = get_stock_history_by_date(stock_code, date_to)
-    if is_saved:
-        return
+    # is_saved = get_stock_history_by_date(stock_code, date_to)
+    # if is_saved:
+    #     return
 
     date_from_parts = date_from.split('-')
     date_to_parts = date_to.split('-')
