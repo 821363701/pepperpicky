@@ -1,117 +1,43 @@
 # coding=utf-8
 __author__ = 'yu'
 
-from util import get_all_stock, get_stock_price, rate, get_stock_history_by_date
+from util import get_all_stock, get_stock_price, rate, get_stock_history_by_date, calc_s_line
 
+tmp = ['000911.SZ', '000560.SZ', '000662.SZ', '000718.SZ', '000686.SZ']
 
-# # rank = []
-# for stock in get_all_stock():
-#     start = get_stock_history_by_date(stock, '2015-07-27')
-#     if start:
-#         start_open = start['open']
-#     else:
-#         continue
-#
-#     price = get_stock_price(stock)
-#
-#     # today, yesterday, current, high, low
-#     today = float(price[1])
-#     yesterday = float(price[2])
-#     current = float(price[3])
-#     high = float(price[4])
-#     low = float(price[5])
-#     name = price[0].split('"')[-1]
-#
-#     if today == '0.00':
-#         continue
-#
-#     r = rate(current, start_open)
-#     if 35 > r > 10:
-#         print u'{}\t{}\t{}'.format(r, stock, name)
+rank = []
+for stock in get_all_stock():
+    start = get_stock_history_by_date(stock, '2015-07-27')
+    if start:
+        start_open = start['open']
+    else:
+        continue
 
-    # rank.append((stock, r, name))
+    price = get_stock_price(stock)
 
-# ranked = sorted(rank, key=lambda r: r[1])
-# for rn, rr, name in ranked:
-#     print u'{}\t{}\t{}'.format(rn, rr, name)
+    # today, yesterday, current, high, low
+    today = float(price[1])
+    yesterday = float(price[2])
+    current = float(price[3])
+    high = float(price[4])
+    low = float(price[5])
+    name = price[0].split('"')[-1]
 
+    if today == '0.00':
+        continue
 
-a = '''10.6227106227	600108.SS	亚盛集团
-10.2886247878	600118.SS	中国卫星
-17.2764227642	600160.SS	巨化股份
-16.75			600252.SS	中恒集团
-11.0161443495	600268.SS	国电南自
-12.0666666667	600598.SS	北大荒
-12.5899280576	600618.SS	氯碱化工
-19.0909090909	600726.SS	华电能源
-14.1767490794	600750.SS	江中药业
-12.9787234043	600780.SS	通宝能源
-11.8604651163	600812.SS	华北制药
-27.9928528886	600876.SS	洛阳玻璃
-15.015015015	601116.SS	三江购物
-19.2052980132	603198.SS	迎驾贡酒
-15.4379878578	000011.SZ	深物业A
-21.0152284264	000023.SZ	深天地Ａ
-10.3843008994	000025.SZ	特  力Ａ
-15.4887218045	000151.SZ	中成股份
-11.4403292181	000153.SZ	丰原药业
-12.3543123543	000601.SZ	韶能股份
-12.3032904149	000619.SZ	海螺型材
-20.645595158	000663.SZ	永安林业
-12.6401630989	000721.SZ	西安饮食
-13.9312977099	000801.SZ	四川九洲
-12.0341614907	000829.SZ	天音控股
-20.989010989	000863.SZ	三湘股份
-14.0853658537	000911.SZ	南宁糖业
-15.7509157509	000923.SZ	河北宣工
-13.5342465753	000930.SZ	中粮生化
-11.6037735849	600378.SS	天科股份
-10.0762527233	603099.SS	长白山
-12.8362797848	600340.SS	华夏幸福
-11.2446958982	601777.SS	力帆股份
-10.1799034664	603699.SS	纽威股份
-10.7970784376	002025.SZ	航天电器
-13.6697247706	002059.SZ	云南旅游
-21.0352422907	002062.SZ	宏润建设
-12.1379897785	002124.SZ	天邦股份
-11.6529449018	002143.SZ	印纪传媒
-20.7511737089	002157.SZ	正邦科技
-12.0381406436	002187.SZ	广百股份
-23.4			002234.SZ	民和股份
-11.6301239276	002242.SZ	九阳股份
-10.2507374631	002286.SZ	保龄宝
-10.0367001755	002366.SZ	丹甫股份
-10.044017607	002407.SZ	多氟多
-10.2707749767	002417.SZ	*ST元达
-21.0037174721	002464.SZ	金利科技
-10.0208768267	002485.SZ	希努尔
-66.3198959688	002492.SZ	恒基达鑫
-21.0213187903	002504.SZ	东光微电
-20.9785025945	002509.SZ	天广消防
-21.0191082803	002526.SZ	山东矿机
-21.0191082803	002535.SZ	林州重机
-21.0591900312	002548.SZ	金新农
-14.84375		002567.SZ	唐人神
-15.7840083074	002569.SZ	步森股份
-10.0292825769	002650.SZ	加加食品
-12.5692751053	002675.SZ	东诚药业
-19.456			002714.SZ	牧原股份
-20.987654321	002723.SZ	金莱特
-22.3958333333	002734.SZ	利民股份
-29.3302540416	002746.SZ	仙坛股份
-10.5696009747	002761.SZ	多喜爱
-15.2100434573	002299.SZ	圣农发展
-21.0031347962	002342.SZ	巨力索具'''
+    r = rate(current, start_open)
+    if 35 > r > 10:
+        rank.append((stock, r, name))
 
-for line in a.split('\n'):
-    stock = line.split('\t')[-2]
-    total_rate = line.split('\t')[0]
-    name = line.split('\t')[-1]
+ranked = sorted(rank, key=lambda r: r[1])
+for stock, total_rate, name in ranked:
+    s = calc_s_line(stock)
 
     price = get_stock_price(stock)
     yesterday = float(price[2])
     current = float(price[3])
 
-    r = rate(current, yesterday)
+    today_rate = rate(current, yesterday)
 
-    print '{}\t{}\t{}\t{}'.format(str(r)[:6], str(total_rate)[:6], stock, name)
+    print u'{}\t{}\t{}\t{}\t{}'.format(str(total_rate)[:4], str(today_rate)[:4], s, name, stock)

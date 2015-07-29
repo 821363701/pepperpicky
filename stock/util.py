@@ -80,3 +80,37 @@ def get_stock_history_by_date(stock, date):
 
 def rate(a, b):
     return (a - b) / b * 100
+
+
+def calc_s_line(stock):
+    days = get_stock_days(stock)
+
+    if days.count() < 10:
+        return None
+
+    if is_stop_now(stock):
+        return None
+
+    high = None
+    low = None
+    now = None
+
+    for day in days:
+        if (not high) or (high['high'] < day['high']):
+            high = day
+
+        if (not low) or (low['low'] > day['low']):
+            low = day
+
+        if day['date'] == "2015-07-24":
+            now = day
+
+    if high and low and now:
+        x = high['high'] - low['low']
+        y = now['close'] - low['low']
+        if y == 0.0 or x == 0.0:
+            return None
+
+        return x / y
+    else:
+        return None

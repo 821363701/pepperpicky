@@ -15,7 +15,7 @@ __author__ = 'yu'
 
 '''
 
-from util import get_stock_name_from_mongo, get_all_stock, get_stock_history_by_date, rate, get_stock_days, is_stop_now
+from util import get_stock_name_from_mongo, get_all_stock, get_stock_history_by_date, rate, get_stock_days, is_stop_now, calc_s_line
 
 stocks = get_all_stock()
 
@@ -33,42 +33,15 @@ def test():
 def count_avg_s_line():
     all = []
     for stock in stocks:
-        days = get_stock_days(stock)
+        s = calc_s_line(stock)
 
-        if days.count() < 10:
+        if not s:
             continue
 
-        if is_stop_now(stock):
+        if s > 10.0:
             continue
 
-        high = None
-        low = None
-        now = None
-
-        for day in days:
-            if (not high) or (high['high'] < day['high']):
-                high = day
-
-            if (not low) or (low['low'] > day['low']):
-                low = day
-
-            if day['date'] == "2015-07-24":
-                now = day
-
-        if high and low and now:
-            x = high['high'] - low['low']
-            y = now['close'] - low['low']
-            if y == 0.0 or x == 0.0:
-                continue
-
-            s = x / y
-
-            if s > 10.0:
-                continue
-
-            all.append((stock, s))
-        else:
-            print "error {}".format(stock)
+        all.append((stock, s))
 
     ranked = sorted(all, key=lambda r: r[1])
     count = 0.0
