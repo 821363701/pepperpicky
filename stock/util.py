@@ -6,6 +6,21 @@ from pymongo import MongoClient
 sina_api = 'http://hq.sinajs.cn/etag.php?_=0.9219840362202376&list={}'
 c = MongoClient('121.199.5.143').stock
 
+
+def get_stock_price(stock):
+    parts = stock.split('.')
+    if parts[1] == 'SS':
+        r = requests.get(sina_api.format('sh'+parts[0]))
+    else:
+        r = requests.get(sina_api.format('sz'+parts[0]))
+
+    result = r.text.split(',')
+
+    r.close()
+
+    return result
+
+
 def get_stock_name(stock):
     parts = stock.split('.')
     if parts[1] == 'SS':
