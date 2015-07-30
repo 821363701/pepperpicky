@@ -124,7 +124,7 @@ def get_all():
                 continue
 
             pre, where = prefix
-            date = '2015-07-28'
+            date = '2015-07-29'
 
             get_history(pre, where, a, date, date, True)
 
