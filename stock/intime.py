@@ -28,6 +28,7 @@ for stock in get_all_stock():
 
     r = rate(current, start_open)
     if 35 > r > 10:
+        print stock
         rank.append((stock, r, name))
 
 ranked = sorted(rank, key=lambda r: r[1])
