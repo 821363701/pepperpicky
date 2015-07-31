@@ -29,7 +29,7 @@ yahoo的api是国际性的，是支持国内沪深股市的，但代码稍微变
 深市A股票买卖的代码是以000打头
 
 curl 'http://ichart.yahoo.com/table.csv?s=601211.SS&a=05&b=01&c=2015&d=06&e=24&f=2015&g=d'
-curl 'http://ichart.yahoo.com/table.csv?s=601211.SS&a=06&b=28&c=2015&d=06&e=28&f=2015&g=d'
+curl 'http://ichart.yahoo.com/table.csv?s=601318.SS&a=07&b=30&c=2015&d=07&e=30&f=2015&g=d'
 
 '''
 
@@ -84,7 +84,7 @@ def get_history(pre, where, a, date_from, date_to, con=False):
 
     try:
         print 'start load {} {}'.format(stock_code, str(datetime.now()))
-        r = requests.get(stock_api)
+        r = requests.get(stock_api, timeout=10)
         result = r.text
 
         lines = result.split('\n')
