@@ -82,7 +82,7 @@ def get_history(pre, where, a, date_from, date_to, con=False):
 
     try:
         print 'start load {} {}'.format(stock_code, str(datetime.now()))
-        r = requests.get(stock_api, timeout=(10, 10))
+        r = requests.get(stock_api)
         result = r.text
 
         lines = result.split('\n')
