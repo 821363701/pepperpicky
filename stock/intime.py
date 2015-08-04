@@ -22,10 +22,11 @@ for stock in get_all_stock():
 
     r = rate(current, yesterday)
 
-    if r > 8:
-        buy = int(price[10]) + int(price[12]) + int(price[14]) + int(price[16]) + int(price[18])
-        sell = int(price[20]) + int(price[22]) + int(price[24]) + int(price[26]) + int(price[28])
-        if sell == 0:
-            sell = 1
-        bs = float(buy) / float(sell)
-        print u'{}  {}  {}'.format(name, r, bs)
+    buy = int(price[10]) + int(price[12]) + int(price[14]) + int(price[16]) + int(price[18])
+    sell = int(price[20]) + int(price[22]) + int(price[24]) + int(price[26]) + int(price[28])
+    if sell == 0:
+        sell = 1
+    bs = float(buy) / float(sell)
+
+    if bs > 10 and r < 9.9:
+        print u'{}  {}  {}  {}'.format(stock, name, r, bs)
