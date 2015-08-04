@@ -29,4 +29,3 @@ for stock in get_all_stock():
             sell = 1
         bs = float(buy) / float(sell)
         print u'{}  {}  {}'.format(name, r, bs)
-        continue
