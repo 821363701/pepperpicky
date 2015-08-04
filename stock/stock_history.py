@@ -104,8 +104,8 @@ def get_history(pre, where, a, date_from, date_to, con=False):
                         'stock': stock_code
                     }, upsert=True)
         r.close()
-    except:
-        print 'except when {}'.format(stock_code)
+    except Exception, e:
+        print e
 
 
 def get_all():
