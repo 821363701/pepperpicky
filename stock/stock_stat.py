@@ -17,4 +17,4 @@ for doc in result:
     # print doc['count']
     if doc['count'] != 44:
         print '{}  {}'.format(doc['stock'], doc['count'])
-        get_many_day(doc['stock'], '2015-06-01', '2015-07-29')
+        # get_many_day(doc['stock'], '2015-06-01', '2015-07-29')
