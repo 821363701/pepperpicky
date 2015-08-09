@@ -87,7 +87,7 @@ pipeline = [
         }
     },
     {
-        '$limit': 1000
+        '$limit': 100
     },
     {
         "$group": {
