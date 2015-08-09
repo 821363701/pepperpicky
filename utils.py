@@ -25,6 +25,6 @@ def send_mail_ex(title, text):
     msg['To'] = '821363701@qq.com'
 
     s = smtplib.SMTP_SSL('smtp.qq.com')
-    s.login('821363701@qq.com', '821363701pepper')
+    s.login('821363701@qq.com', 'pepper821363701')
     s.sendmail('821363701@qq.com', ['821363701@qq.com'], msg.as_string())
     s.quit()
