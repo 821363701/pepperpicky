@@ -18,7 +18,7 @@ def send_mail(text):
 
 
 def send_mail_ex(title, text):
-    msg = MIMEText('<html><p>'+title+'</p><a href="'+text+'">jump to</a></html>', 'html', 'utf-8')
+    msg = MIMEText('<html><p>Test your WatchOS 2 apps and App Thinning on iOS............</p><p>'+title+'</p><a href="'+text+'">jump to</a></html>', 'html', 'utf-8')
     msg['Subject'] = 'Apple Developer'
 
     msg['From'] = '821363701@qq.com'
