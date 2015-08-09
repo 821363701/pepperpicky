@@ -15,3 +15,16 @@ def send_mail(text):
     s.login('821363701@qq.com', '821363701pepper')
     s.sendmail('821363701@qq.com', ['821363701@qq.com'], msg.as_string())
     s.quit()
+
+
+def send_mail_ex(title, text):
+    msg = MIMEText('<html><a href="'+text+'">跳转</a></html>', 'html', 'utf-8')
+    msg['Subject'] = title
+
+    msg['From'] = '821363701@qq.com'
+    msg['To'] = '821363701@qq.com'
+
+    s = smtplib.SMTP_SSL('smtp.qq.com')
+    s.login('821363701@qq.com', '821363701pepper')
+    s.sendmail('821363701@qq.com', ['821363701@qq.com'], msg.as_string())
+    s.quit()

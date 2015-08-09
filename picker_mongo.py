@@ -8,7 +8,7 @@ from datetime import datetime
 import logging
 from pymongo import MongoClient
 from const import *
-from utils import send_mail
+from utils import send_mail, send_mail_ex
 
 logging.basicConfig(filename='picker.log', level=logging.INFO)
 
@@ -42,6 +42,7 @@ class Picker(object):
             'timestamp': str(time.time()),
             'source': SOURCE_DOUBAN,
         })
+        send_mail_ex(title, 'http://douban.com/group/topic/'+topic_id)
 
     def __append_visited_topic(self, url, title):
         topic_id = url.split('/')[-2]
