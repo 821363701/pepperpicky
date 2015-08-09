@@ -18,8 +18,8 @@ def send_mail(text):
 
 
 def send_mail_ex(title, text):
-    msg = MIMEText('<html><a href="'+text+'">跳转</a></html>', 'html', 'utf-8')
-    msg['Subject'] = title
+    msg = MIMEText('<html><p>'+title+'</p><a href="'+text+'">jump to</a></html>', 'html', 'utf-8')
+    msg['Subject'] = 'Apple Developer'
 
     msg['From'] = '821363701@qq.com'
     msg['To'] = '821363701@qq.com'
