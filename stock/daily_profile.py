@@ -15,3 +15,4 @@ profile_150805 = jmzy_profile_150805 + bmgf_profile_150805 + jshg_profile_150805
 price_150805 = 333261.4
 
 
+price_150806 = 330636.98

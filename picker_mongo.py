@@ -62,6 +62,8 @@ class Picker(object):
             result = requests.get(url, cookies=self.cookies, timeout=10)
         except:
             result = requests.get(url, cookies=self.cookies)
+        finally:
+            result.close()
         return result
 
     def __search_in_group_topics(self, topics):
