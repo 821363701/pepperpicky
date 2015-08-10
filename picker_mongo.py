@@ -44,7 +44,7 @@ class Picker(object):
         })
 
         # if area in [u'上海', u'四川成都', u'重庆', u'福建厦门', u'江苏南京', u'浙江杭州', u'陕西西安']:
-        if area in [u'上海']:
+        if area in [u'上海', u'江苏南京']:
             send_mail_ex('['+area+']'+title, 'http://douban.com/group/topic/'+topic_id)
 
     def __append_visited_topic(self, url, title):
