@@ -17,7 +17,7 @@ def send_mail(text):
     s.quit()
 
 
-MAIL_TEMPLATE = '''<html>
+MAIL_TEMPLATE = u'''<html>
 <p>Test your WatchOS 2 apps and App Thinning on iOS. You can now invite internal testers to use testflight to test your watchOS 2 apps and your apps that support App thinning, coming in iOS 9.</p>
 <p>{}</p>
 <a href="{}">jump to</a>
