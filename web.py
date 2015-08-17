@@ -6,6 +6,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 from pymongo import MongoClient
+from bson import ObjectId
 import pymongo
 
 LIMIT_DEFAULT = 50
@@ -16,6 +17,9 @@ class MongoHandler(tornado.web.RequestHandler):
         lines = []
         for l in self.application.c.all_topic.find({
             'keyword': keyword,
+            'read': {
+                '$ne': 1
+            }
         }, limit=limit).sort('_id', pymongo.DESCENDING):
             lines.append([l['topic_id'], l['keyword'], l['founder_id'], l['topic_title'], l['timestamp'], str(l['_id'])])
 
@@ -60,7 +64,13 @@ class MongoDenyHandler(MongoHandler):
 
 class MongoReadHandler(MongoHandler):
     def get(self, mid):
-        self.application.c.read.insert()
+        self.application.c.all_topic.update({
+            '_id': ObjectId(mid)
+        }, {
+            '$set': {
+                'read': 1
+            }
+        })
 
 
 class MongoSearchHandler(MongoHandler):

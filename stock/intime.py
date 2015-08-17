@@ -5,6 +5,7 @@ from util import get_all_stock, get_stock_price, rate, get_stock_history_by_date
 
 
 def find():
+    count = 0
     rank = []
     for stock in get_all_stock():
         price = get_stock_price(stock)
@@ -28,17 +29,27 @@ def find():
 
         if sell == 0:
             bs = float(buy) / float(1)
-            if volume > 0:
-                buy_rate = buy /volume
-                if buy_rate > 0.1:
-                    print u'{}  {}  {}  {}'.format(stock, name, r, buy_rate)
         else:
             bs = float(buy) / float(sell)
 
+        if volume > 0:
+            buy_rate = buy / volume
 
+        ###############
+
+        if r > 9.9:
+            count += 1
+        else:
+            if name.find(u'中') == 0:
+                print u'{} {} {}'.format(stock, name, r)
+
+    print count
+
+        # if buy_rate > 0.1:
+        #         print u'{}  {}  {}  {}'.format(stock, name, r, buy_rate)
 
         # if bs > 10 and r < 9.9:
         #     print u'{}  {}  {}  {}'.format(stock, name, r, bs)
 
 
-
+find()
