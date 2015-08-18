@@ -17,8 +17,8 @@
                 <div class="navbar-header">
                     <div class="navbar-brand">
                         Pepper
-                        <a href="/search" target="_blank" class="btn btn-default navbar-btn">查找</a>
-                        <a href="/" target="_blank" class="btn btn-danger navbar-btn">首页</a>
+                        <a href="/search" class="btn btn-default navbar-btn">查找</a>
+                        <a href="/" class="btn btn-danger navbar-btn">首页</a>
                     </div>
                 </div>
             </div>
@@ -32,14 +32,14 @@
                 <span>{{datetime.datetime.fromtimestamp(float(line[4])).strftime('%m-%d %H:%M')}}</span>
                 {% end %}
 
-                <a class="btn btn-xs btn-info" target="_blank" href="http://douban.com/people/{{line[2]}}/">{{line[1]}}</a>
+                <a class="btn btn-xs btn-info" href="http://douban.com/people/{{line[2]}}/">{{line[1]}}</a>
 
-                <a class="btn btn-xs btn-primary" target="_blank" href="/history?q={{line[2]}}">历史</a>
+                <a class="btn btn-xs btn-primary" href="/history?q={{line[2]}}">历史</a>
 
                 <div deny_id="{{line[2]}}" class="btn btn-danger btn-xs pull-right pp-delete">X</div>
             </div>
             <div class="panel-body">
-                <a class="read" mid="{{line[5]}}" target="_blank" href="http://douban.com/group/topic/{{line[0]}}">{{line[3]}}</a>
+                <a class="read" mid="{{line[5]}}" href="http://douban.com/group/topic/{{line[0]}}">{{line[3]}}</a>
                 <div read_id="{{line[5]}}" class="btn btn-default btn-xs pull-right pp-read">已读</div>
             </div>
         </div>
