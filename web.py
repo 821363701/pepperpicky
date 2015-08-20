@@ -157,6 +157,7 @@ class Application(tornado.web.Application):
         self.c = MongoClient('121.199.5.143').pick
         self.stock = MongoClient('121.199.5.143').stock
         self.c.visited_topic.ensure_index('topic_id')
+        self.c.all_topic.ensure_index('read')
 
 
 application = Application()
