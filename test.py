@@ -19,23 +19,28 @@ for coo in raw_cookie.split(';'):
 def print_beautiful(content):
     for item in content.contents:
         if type(item) == NavigableString:
+            if item != '\n':
+                print item
             continue
 
-        if item.name == 'p':
-            print item.text
-        elif item.name == 'img':
+        if item.name == 'img':
             for key, value in item.attrs:
                 if key == 'src':
                     print value
                     break
-        elif item.name == 'div':
+
+        if item.name == 'br':
+            print ''
+            continue
+
+        if len(item.contents) > 0:
             print_beautiful(item)
-        else:
-            print 'unrecognized tag'
 
 
 
-topic_url = u'http://www.douban.com/group/topic/79001001'
+
+
+topic_url = u'http://www.douban.com/group/topic/79005000'
 
 r = requests.get(topic_url, cookies=cookies)
 soup = BeautifulSoup(r.text)

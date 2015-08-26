@@ -30,20 +30,22 @@ for coo in raw_cookie.split(';'):
 def print_beautiful(content):
     for item in content.contents:
         if type(item) == NavigableString:
+            if item != '\n':
+                print item
             continue
 
-        if item.name == 'p':
-            print item.text
-        elif item.name == 'img':
+        if item.name == 'img':
             for key, value in item.attrs:
                 if key == 'src':
                     print value
-                    last_img.append(value)
                     break
-        elif item.name == 'div':
+
+        if item.name == 'br':
+            print ''
+            continue
+
+        if len(item.contents) > 0:
             print_beautiful(item)
-        else:
-            print 'unrecognized tag'
 
 
 def quit():
@@ -88,10 +90,11 @@ def detail():
 
     writer = soup.find('span', {'class': 'from'})
     name = writer.find('a').text
-    print u'name: {}'.format(name)
+    print u'+-------------------------'
+    print u'| name: {}'.format(name)
     belong = soup.find('div', {'class': 'title'}).find('a').text
-    print u'belong: {}'.format(belong)
-    print u'--------------------------'
+    print u'| belong: {}'.format(belong)
+    print u'+-------------------------'
 
     content = soup.find('div', {'class': 'topic-content'})
     print_beautiful(content)
@@ -144,12 +147,12 @@ def init():
 
 
 def listen():
+    show()
+
     while True:
         line = raw_input('[pepper] ')
 
-        if line == 'show':  # show latest topic
-            show()
-        elif line == 'detail':
+        if line == 'detail':
             detail()
         elif line == 'deny':
             deny()
