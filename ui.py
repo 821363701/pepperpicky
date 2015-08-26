@@ -88,7 +88,10 @@ def detail():
 
     writer = soup.find('span', {'class': 'from'})
     name = writer.find('a').text
-    print u'[[{}]]'.format(name)
+    print u'name: {}'.format(name)
+    belong = soup.find('div', {'class': 'title'}).find('a').text
+    print u'belong: {}'.format(belong)
+    print u'--------------------------'
 
     content = soup.find('div', {'class': 'topic-content'})
     print_beautiful(content)
