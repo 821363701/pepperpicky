@@ -38,6 +38,7 @@ def print_beautiful(content):
             for key, value in item.attrs:
                 if key == 'src':
                     print value
+                    last_img.append(value)
                     break
 
         if item.name == 'br':
@@ -148,11 +149,12 @@ def init():
 
 def listen():
     show()
-
     while True:
         line = raw_input('[pepper] ')
 
-        if line == 'detail':
+        if line == 'show':  # show latest topic
+            show()
+        elif line == 'detail':
             detail()
         elif line == 'deny':
             deny()
