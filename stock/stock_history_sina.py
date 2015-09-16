@@ -5,7 +5,8 @@ from util import get_all_stock, get_stock_price, rate, get_stock_history_by_date
 
 c = MongoClient('121.199.5.143').stock
 
-for stock in get_all_stock():
+for stock in ['002476.SZ']:
+# for stock in get_all_stock():
     price = get_stock_price(stock)
 
     # today, yesterday, current, high, low

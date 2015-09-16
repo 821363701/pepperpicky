@@ -2,6 +2,7 @@ from __future__ import print_function
 __author__ = 'yu'
 
 import os
+import time
 clear = lambda: os.system('clear')
 from util import get_stock_price, rate
 from datetime import datetime
@@ -73,19 +74,20 @@ if __name__ == '__main__':
     all_stock = []
     with open('buy_rate.dat', 'r') as fp:
         for line in fp.readlines():
-            stock, name, r, buy_rate = line.split('  ')
+            stock, name = line.split('  ')
             all_stock.append(Stock(stock, name))
 
     while True:
         result = []
         for stock in all_stock:
-            if stock.reopen:
-                result.append(stock.get_price()+'**')
-            else:
-                if stock.available:
-                    result.append(stock.get_price())
-                else:
-                    result.append(stock.get_price()+'#')
+            result.append(stock.get_price())
+            # if stock.reopen:
+            #     result.append(stock.get_price()+'**')
+            # else:
+            #     if stock.available:
+            #         result.append(stock.get_price())
+            #     else:
+            #         result.append(stock.get_price()+'#')
 
         clear()
 
@@ -94,7 +96,7 @@ if __name__ == '__main__':
             if not l:
                 continue
 
-            if (index+1) % 5 == 0:
+            if (index+1) % 3 == 0:
                 print(l, end='\n')
             else:
                 print(l, end='\t')
@@ -103,3 +105,5 @@ if __name__ == '__main__':
 
         print('')
         print(datetime.now())
+
+        time.sleep(10)
