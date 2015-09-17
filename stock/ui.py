@@ -55,7 +55,7 @@ if __name__ == "__main__":
     with open('buy_rate.dat', 'r') as fp:
         for line in fp.readlines():
             stock, name = line.split('  ')
-            all_stock.append(Stock(stock, name))
+            all_stock.append(Stock(stock, name.rstrip().decode('utf8')))
 
     global mw
     main_tk = tk.Tk()

@@ -30,7 +30,7 @@ class Stock:
 
         r = str(rate(current, yesterday))[:4]
 
-        return u'{} ({}% {})'.format(self.stock, r, current)
+        return u'{} {} ({}% {})'.format(self.name, self.stock, r, current)
 
 
 if __name__ == '__main__':

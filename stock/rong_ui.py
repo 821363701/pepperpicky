@@ -44,6 +44,17 @@ data = '''2015-09-15	33,918,103	630,304,934	-6.5	6.69	6.25
 
 import pygal
 
+
+def data_standard(l):
+    avg = float(sum(l)/len(l))
+
+    new_l = []
+    for i in l:
+        new_l.append(i/avg)
+
+    return new_l
+
+
 x = []
 y1 = []
 y2 = []
@@ -70,10 +81,9 @@ y4.reverse()
 line_chart = pygal.Line(width=1600, height=800)
 line_chart.title = 'rongzi'
 line_chart.x_labels = x
-line_chart.add('rongzi', y1)
-line_chart.add('rongzi_balance', y2)
+line_chart.add('rongzi', data_standard(y1))
+line_chart.add('rongzi_balance', data_standard(y2))
 line_chart.add('open', y3, secondary=True)
 line_chart.add('close', y4, secondary=True)
 line_chart.render_to_file('test.svg')
-line_chart.render_to_png('test.png')
 

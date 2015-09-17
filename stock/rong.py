@@ -1,9 +1,11 @@
 __author__ = 'yu'
 
 import requests
+import pygal
 from BeautifulSoup import BeautifulSoup
 from datetime import datetime, timedelta
 from util import get_stock_history_by_date, rate
+from stock_history import get_history
 
 url_rong = 'http://www.szse.cn/szseWeb/FrontController.szse'
 
@@ -30,15 +32,51 @@ def get_rong_sz(stock_code, stock_date):
         r.close()
 
 
-# print get_rong_sz('002476', '2015-09-14')
+# print get_rong_sz('002230', '2015-09-14')
 
-for i in range(60):
-    day = datetime.now()+timedelta(days=-i)
-    date = day.strftime('%Y-%m-%d')
 
-    result = get_rong_sz('002476', date)
-    if result:
-        price = get_stock_history_by_date('002476.SZ', date)
-        r = rate(price['close'], price['open'])
-        r = str(r)[:4]
-        print '{}\t{}\t{}\t{}\t{}\t{}'.format(date, result[2], result[3], r, price['open'], price['close'])
+def calc_rong_svg(stock_code):
+    x = []
+    y1 = []
+    y2 = []
+    y3 = []
+    y4 = []
+
+    for i in range(60):
+        day = datetime.now()+timedelta(days=-i)
+        date = day.strftime('%Y-%m-%d')
+
+        result = get_rong_sz(stock_code, date)
+        if result:
+            price = get_stock_history_by_date(stock_code+'.SZ', date)
+            if not price:
+                price = {
+                    'open': 0,
+                    'close': 0
+                }
+
+            print '{}\t{}\t{}\t{}\t{}'.format(date, result[2], result[3], price['open'], price['close'])
+
+            x.append(date[6:])
+            y1.append(int(result[2].replace(',', '')))
+            y2.append(int(result[3].replace(',', '')))
+            y3.append(float(price['open']))
+            y4.append(float(price['close']))
+
+    x.reverse()
+    y1.reverse()
+    y2.reverse()
+    y3.reverse()
+    y4.reverse()
+
+    line_chart = pygal.Line(width=1600, height=800)
+    line_chart.title = 'rongzi'
+    line_chart.x_labels = x
+    line_chart.add('rongzi', y1)
+    line_chart.add('rongzi_balance', y2)
+    line_chart.add('open', y3, secondary=True)
+    line_chart.add('close', y4, secondary=True)
+    line_chart.render_to_file(stock_code+'.svg')
+
+
+# calc_rong_svg('002230')
