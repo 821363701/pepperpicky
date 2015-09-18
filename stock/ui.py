@@ -43,7 +43,6 @@ def update_callback():
     while True:
         try:
             item = result_queue.get(False)
-            print item
             i, r = item
             mw.update_one(i, r)
         except Empty:

@@ -15,6 +15,7 @@ class Stock:
         self.five_price = []
         self.available = True
         self.reopen = False
+        self.last_price = None
 
     def get_price(self):
         price = get_stock_price(self.stock)
@@ -30,7 +31,18 @@ class Stock:
 
         r = str(rate(current, yesterday))[:4]
 
-        return u'{} {} ({}% {})'.format(self.name, self.stock, r, current)
+        forward = '--'
+        if not self.last_price:
+            forward = '--'
+        elif current > self.last_price:
+            forward = '/\\'
+        elif current < self.last_price:
+            forward = '\/'
+        else:
+            forward = '--'
+
+        self.last_price = current
+        return u'{} {} ({}% {}){}'.format(self.name, self.stock, r, current, forward)
 
 
 if __name__ == '__main__':
