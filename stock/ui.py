@@ -3,7 +3,7 @@ __author__ = 'yu'
 import Tkinter as tk
 import thread
 import time
-from Queue import Queue
+from Queue import Queue, Empty
 from datetime import datetime
 from daily_monitor_simple import Stock
 
@@ -35,6 +35,20 @@ def update_thread():
     while True:
         i, r = result_queue.get()
         mw.update_one(i, r)
+
+
+def update_callback():
+    global result_queue
+    global mw
+    while True:
+        try:
+            item = result_queue.get(False)
+            print item
+            i, r = item
+            mw.update_one(i, r)
+        except Empty:
+            break
+    mw.after(100, update_callback)
 
 
 class MainWindow(tk.Frame):
@@ -82,9 +96,11 @@ if __name__ == "__main__":
     main_tk = tk.Tk()
     mw = MainWindow(main_tk, "stock")
 
+
     # thread.start_new_thread(data_thread, (all_stock,))
     for index, stock in enumerate(all_stock):
         thread.start_new_thread(stock_thread, (stock, index))
-    thread.start_new_thread(update_thread, ())
+    # thread.start_new_thread(update_thread, ())
+    mw.after(100, update_callback)
 
     tk.mainloop()
