@@ -42,7 +42,7 @@ def calc_rong_svg(stock_code):
     y3 = []
     y4 = []
 
-    for i in range(60):
+    for i in range(10):
         day = datetime.now()+timedelta(days=-i)
         date = day.strftime('%Y-%m-%d')
 
@@ -79,4 +79,5 @@ def calc_rong_svg(stock_code):
     line_chart.render_to_file(stock_code+'.svg')
 
 
-# calc_rong_svg('002230')
+if __name__ == '__main__':
+    calc_rong_svg('002476')
