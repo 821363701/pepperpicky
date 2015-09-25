@@ -86,7 +86,7 @@ class MainWindow(tk.Frame):
 
 if __name__ == "__main__":
     all_stock = []
-    with open('buy_rate.dat', 'r') as fp:
+    with open('main_index.config', 'r') as fp:
         for line in fp.readlines():
             stock, name = line.split('  ')
             all_stock.append(Stock(stock, name.rstrip().decode('utf8')))

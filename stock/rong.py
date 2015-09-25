@@ -10,6 +10,16 @@ from stock_history import get_history
 url_rong = 'http://www.szse.cn/szseWeb/FrontController.szse'
 
 
+def data_standard(l):
+    avg = float(sum(l)/len(l))
+
+    new_l = []
+    for i in l:
+        new_l.append(i/avg)
+
+    return new_l
+
+
 def get_rong_sz(stock_code, stock_date):
     r = requests.post(url_rong, {
         'ACTIONID': 7,
@@ -42,7 +52,7 @@ def calc_rong_svg(stock_code):
     y3 = []
     y4 = []
 
-    for i in range(10):
+    for i in range(30):
         day = datetime.now()+timedelta(days=-i)
         date = day.strftime('%Y-%m-%d')
 
@@ -72,12 +82,13 @@ def calc_rong_svg(stock_code):
     line_chart = pygal.Line(width=1600, height=800)
     line_chart.title = 'rongzi'
     line_chart.x_labels = x
-    line_chart.add('rongzi', y1)
-    line_chart.add('rongzi_balance', y2)
-    line_chart.add('open', y3, secondary=True)
-    line_chart.add('close', y4, secondary=True)
+    line_chart.add('rongzi', data_standard(y1))
+    line_chart.add('rongzi_balance', data_standard(y2))
+    # line_chart.add('open', y3, secondary=True)
+    line_chart.add('close', data_standard(y4), secondary=True)
     line_chart.render_to_file(stock_code+'.svg')
 
 
 if __name__ == '__main__':
-    calc_rong_svg('002476')
+    get_history('002', 'SZ', '312', '2015-08-20', '2015-09-24')
+    calc_rong_svg('002312')
