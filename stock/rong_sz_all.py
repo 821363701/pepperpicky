@@ -46,8 +46,8 @@ def get_rong_sz(stock_code, stock_date):
 
 
 def calc_rong_svg(stock_code):
-    for i in range(100):
-        day = datetime.now()+timedelta(days=-i-100)
+    for i in range(5):
+        day = datetime.now()+timedelta(days=-i)
         date = day.strftime('%Y-%m-%d')
 
         result = get_rong_sz(stock_code, date)
@@ -55,7 +55,8 @@ def calc_rong_svg(stock_code):
             print '{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(date, result[0], result[1], result[2], result[3], result[4], result[5])
 
 
-data = '''2015-09-24	25,983,071,655	349,152,980,691	3,220,636	141,193,577	877,395,639	350,030,376,330
+data = '''2015-09-25	24,538,918,801	345,538,288,563	2,727,330	142,026,954	854,226,871	346,392,515,434
+2015-09-24	25,983,071,655	349,152,980,691	3,220,636	141,193,577	877,395,639	350,030,376,330
 2015-09-23	26,460,495,533	348,862,246,310	3,861,672	139,705,445	871,789,392	349,734,035,702
 2015-09-22	31,598,565,535	348,373,107,279	2,121,641	136,335,618	876,978,020	349,250,085,299
 2015-09-21	27,085,902,018	348,283,136,964	2,113,112	140,131,825	881,665,269	349,164,802,233
@@ -207,7 +208,7 @@ def test():
     y8 = []
 
     last_rongzi_balance = 0
-    for line in data.split('\n'):
+    for line in data.split('\n')[:10]:
         date, rongzi_buy, rongzi_balance, rongquan_sell_liang, rongquan_balance_liang, rongquan_balance, rong_all_balance = line.split('\t')
 
         price = get_stock_history_by_date('399001.SZ', date)

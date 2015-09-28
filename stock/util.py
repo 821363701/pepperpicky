@@ -8,6 +8,23 @@ c = MongoClient('121.199.5.143').stock
 
 
 def get_stock_price(stock):
+    '''
+    get stock price
+
+    :param stock:
+    :return:
+    0: name
+    1: today
+    2: yesterday
+    3: current
+    4: high
+    5: low
+    6:
+    7:
+    8: volume
+    9: turnover
+
+    '''
     parts = stock.split('.')
     if parts[1] == 'SS':
         r = requests.get(sina_api.format('sh'+parts[0]))

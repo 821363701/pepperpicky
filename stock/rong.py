@@ -61,16 +61,16 @@ def calc_rong_svg(stock_code):
             price = get_stock_history_by_date(stock_code+'.SZ', date)
             if not price:
                 price = {
-                    'open': 0,
+                    'volume': 0,
                     'close': 0
                 }
 
-            print '{}\t{}\t{}\t{}\t{}'.format(date, result[2], result[3], price['open'], price['close'])
+            print '{}\t{}\t{}\t{}\t{}'.format(date, result[2], result[3], price['volume'], price['close'])
 
             x.append(date[6:])
             y1.append(int(result[2].replace(',', '')))
             y2.append(int(result[3].replace(',', '')))
-            y3.append(float(price['open']))
+            y3.append(float(price['volume']))
             y4.append(float(price['close']))
 
     x.reverse()
@@ -84,11 +84,11 @@ def calc_rong_svg(stock_code):
     line_chart.x_labels = x
     line_chart.add('rongzi', data_standard(y1))
     line_chart.add('rongzi_balance', data_standard(y2))
-    # line_chart.add('open', y3, secondary=True)
+    line_chart.add('volume', data_standard(y3))
     line_chart.add('close', data_standard(y4), secondary=True)
     line_chart.render_to_file(stock_code+'.svg')
 
 
 if __name__ == '__main__':
-    get_history('002', 'SZ', '312', '2015-08-20', '2015-09-24')
-    calc_rong_svg('002312')
+    get_history('002', 'SZ', '476', '2015-09-01', '2015-09-28')
+    calc_rong_svg('002476')

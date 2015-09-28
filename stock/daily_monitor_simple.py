@@ -27,7 +27,7 @@ class Stock:
         current = float(price[3])
         high = float(price[4])
         low = float(price[5])
-        volume = float(price[8])
+        turnover = int(float(price[9])/100000000.0)
         name = price[0].split('"')[-1]
 
         r = str(rate(current, yesterday))[:4]
@@ -42,7 +42,7 @@ class Stock:
             pass
 
         self.last_price = current
-        return u'{} {} ({}% {}) {}'.format(self.name, self.stock, r, current, self.forward)
+        return u'{} {} ({}% {}) {} {}'.format(self.name, self.stock, r, current, self.forward, turnover)
 
 
 if __name__ == '__main__':
