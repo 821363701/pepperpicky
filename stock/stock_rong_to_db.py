@@ -12,8 +12,8 @@ if __name__ == '__main__':
             date = day.strftime('%Y-%m-%d')
             result = get_rong_sz(stock[:6], date)
             if result:
-                print code
                 code, name, rongzi_buy, rongzi_balance, rongquan_sell_liang, rongquan_balance_liang, rongquan_balance, rong_all_balance = result
+                print code
 
                 c.history.update({
                     'date': date,
