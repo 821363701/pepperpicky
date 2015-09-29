@@ -19,8 +19,8 @@ def get_stock_price(stock):
     3: current
     4: high
     5: low
-    6:
-    7:
+    6: buy 1
+    7: sell 1
     8: volume
     9: turnover
 

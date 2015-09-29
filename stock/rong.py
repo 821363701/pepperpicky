@@ -90,5 +90,5 @@ def calc_rong_svg(stock_code):
 
 
 if __name__ == '__main__':
-    get_history('002', 'SZ', '476', '2015-09-01', '2015-09-28')
-    calc_rong_svg('002476')
+    get_history('002', 'SZ', '024', '2015-09-01', '2015-09-28')
+    calc_rong_svg('002024')
