@@ -10,18 +10,21 @@ if __name__ == '__main__':
         if stock.startswith('000') or stock.startswith('002'):
             day = datetime.now()+timedelta(days=-1)
             date = day.strftime('%Y-%m-%d')
-            code, name, rongzi_buy, rongzi_balance, rongquan_sell_liang, rongquan_balance_liang, rongquan_balance, rong_all_balance = get_rong_sz(stock[:6], date)
+            result = get_rong_sz(stock[:6], date)
+            if result:
+                print code
+                code, name, rongzi_buy, rongzi_balance, rongquan_sell_liang, rongquan_balance_liang, rongquan_balance, rong_all_balance = result
 
-            c.history.update({
-                'date': date,
-                'stock': stock
-            }, {
-                '$set': {
-                    'rongzi_buy': rongzi_buy,
-                    'rongzi_balance': rongzi_balance,
-                    'rongquan_sell_liang': rongquan_sell_liang,
-                    'rongquan_balance_liang': rongquan_balance_liang,
-                    'rongquan_balance': rongquan_balance,
-                    'rong_all_balance': rong_all_balance
-                }
-            })
+                c.history.update({
+                    'date': date,
+                    'stock': stock
+                }, {
+                    '$set': {
+                        'rongzi_buy': rongzi_buy,
+                        'rongzi_balance': rongzi_balance,
+                        'rongquan_sell_liang': rongquan_sell_liang,
+                        'rongquan_balance_liang': rongquan_balance_liang,
+                        'rongquan_balance': rongquan_balance,
+                        'rong_all_balance': rong_all_balance
+                    }
+                })
