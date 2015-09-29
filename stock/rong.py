@@ -83,12 +83,12 @@ def calc_rong_svg(stock_code):
     line_chart.title = 'rongzi'
     line_chart.x_labels = x
     line_chart.add('rongzi', data_standard(y1))
-    line_chart.add('rongzi_balance', data_standard(y2))
-    line_chart.add('volume', data_standard(y3))
-    line_chart.add('close', data_standard(y4), secondary=True)
+    # line_chart.add('rongzi_balance', data_standard(y2))
+    # line_chart.add('volume', data_standard(y3))
+    # line_chart.add('close', data_standard(y4), secondary=True)
     line_chart.render_to_file(stock_code+'.svg')
 
 
 if __name__ == '__main__':
-    get_history('002', 'SZ', '024', '2015-09-01', '2015-09-28')
-    calc_rong_svg('002024')
+    # get_history('000', 'SZ', '156', '2015-09-01', '2015-09-28')
+    calc_rong_svg('002701')

@@ -127,7 +127,7 @@ class StockHandler(tornado.web.RequestHandler):
     def get(self, stock):
         days = self.application.stock.history.find({
             'stock': stock
-        })
+        }).sort('date')
 
         self.render('stock.html', days=days)
 
