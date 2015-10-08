@@ -16,7 +16,7 @@ for stock in get_all_stock():
     low = float(price[5])
     name = price[0].split('"')[-1]
     date = price[30]
-    volume = price[9]
+    volume = price[8]
 
     print stock
     c.history.update({
