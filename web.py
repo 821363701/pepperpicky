@@ -129,7 +129,11 @@ class StockHandler(tornado.web.RequestHandler):
             'stock': stock
         }).sort('date')
 
-        self.render('stock.html', days=days)
+        result = []
+        for day in days:
+            result.append(day)
+
+        self.render('stock.html', days=result)
 
 
 class Application(tornado.web.Application):

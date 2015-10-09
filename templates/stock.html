@@ -22,7 +22,8 @@
                 <th><div class="btn btn-info">rongzi_buy</div></th>
                 <th><div class="btn btn-info">rong_all_balance</div></th>
             </tr>
-        {% for day in days %}
+        {% for day in days[-60:] %}
+            {% if day['volume'] != 0 %}
             <tr>
                 <td class="stock">{{ day['stock'] }}</td>
                 <td class="date">{{ day['date'] }}</td>
@@ -31,6 +32,7 @@
                 <td class="rongzi_buy">{{ int(day.get('rongzi_buy', '0').replace(',', '')) }}</td>
                 <td class="rong_all_balance">{{ int(day.get('rong_all_balance', '0').replace(',', '')) }}</td>
             </tr>
+            {% end %}
         {% end %}
         </table>
     </div>
@@ -53,9 +55,15 @@
                 y.push(data.textContent);
             })
 
-            myNewChart.Line({
+            myNewChart.Bar({
                 labels: x,
                 datasets: [{
+                    fillColor: "rgba(151,187,205,0.2)",
+                    strokeColor: "rgba(151,187,205,1)",
+                    pointColor: "rgba(151,187,205,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(151,187,205,1)",
                     data: y
                 }]
             });
