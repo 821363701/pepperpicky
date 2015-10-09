@@ -89,7 +89,7 @@ def get_history(pre, where, a, date_from, date_to, con=False):
         for line in lines[1:]:
             if line:
                 parts = line.split(',')
-                if len(parts) >= 7:
+                if len(parts) >= 7 and float(parts[5]) > 0.0:
                     c.history.update({
                         'date': parts[0],
                         'stock': stock_code
@@ -154,6 +154,6 @@ def get_002():
 
 
 if __name__ == '__main__':
-    get_history('399', 'SZ', '001', '2015-09-01', '2015-09-24')
+    get_history('000', 'SZ', '777', '2015-08-01', '2015-08-30')
 
 
