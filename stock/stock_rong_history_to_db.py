@@ -37,4 +37,4 @@ if __name__ == '__main__':
     #     if stock.startswith('000') or stock.startswith('002'):
     #         save_rong_for_days_before(stock, 30)
 
-    save_rong_for_days_before('000777.SZ', 100)
+    save_rong_for_days_before('002476.SZ', 100)

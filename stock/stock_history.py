@@ -64,6 +64,8 @@ def tran_date_month(month):
 
 
 def get_history(pre, where, a, date_from, date_to, con=False):
+    stock_code = base_stock.format(pre, a) + '.' + where
+
     if con:
         is_saved = get_stock_history_by_date(stock_code, date_to)
         if is_saved:
@@ -71,8 +73,6 @@ def get_history(pre, where, a, date_from, date_to, con=False):
 
     if not is_exist(where, base_stock.format(pre, a)):
         return
-
-    stock_code = base_stock.format(pre, a) + '.' + where
 
     date_from_parts = date_from.split('-')
     date_to_parts = date_to.split('-')
@@ -94,14 +94,16 @@ def get_history(pre, where, a, date_from, date_to, con=False):
                         'date': parts[0],
                         'stock': stock_code
                     }, {
-                        'date': parts[0],
-                        'open': float(parts[1]),
-                        'high': float(parts[2]),
-                        'low': float(parts[3]),
-                        'close': float(parts[4]),
-                        'volume': float(parts[5]),
-                        'adj': float(parts[6]),
-                        'stock': stock_code
+                        '$set': {
+                            'date': parts[0],
+                            'open': float(parts[1]),
+                            'high': float(parts[2]),
+                            'low': float(parts[3]),
+                            'close': float(parts[4]),
+                            'volume': float(parts[5]),
+                            'adj': float(parts[6]),
+                            'stock': stock_code
+                        }
                     }, upsert=True)
         r.close()
     except Exception, e:
@@ -171,6 +173,6 @@ def get_002():
 
 
 if __name__ == '__main__':
-    get_all_stock_many_day('2015-09-01', '2015-09-30')
-
+    # get_all_stock_many_day('2015-09-01', '2015-09-30')
+    get_many_day('002476.SZ', '2015-09-01', '2015-09-30')
 

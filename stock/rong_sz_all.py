@@ -46,7 +46,7 @@ def get_rong_sz(stock_code, stock_date):
 
 
 def calc_rong_svg(stock_code):
-    for i in range(5):
+    for i in range(20):
         day = datetime.now()+timedelta(days=-i)
         date = day.strftime('%Y-%m-%d')
 
@@ -55,7 +55,14 @@ def calc_rong_svg(stock_code):
             print '{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(date, result[0], result[1], result[2], result[3], result[4], result[5])
 
 
-data = '''2015-09-25	24,538,918,801	345,538,288,563	2,727,330	142,026,954	854,226,871	346,392,515,434
+data = '''
+2015-10-12	45,892,092,484	354,187,268,018	7,790,786	137,823,946	901,969,466	355,089,237,484
+2015-10-09	29,645,835,510	347,051,753,251	2,450,376	136,334,515	855,938,047	347,907,691,298
+2015-10-08	32,244,629,756	346,111,855,937	7,714,011	138,497,640	859,995,782	346,971,851,719
+2015-09-30	15,974,888,336	338,943,286,646	1,462,000	132,000,463	787,479,419	339,730,766,065
+2015-09-29	19,903,012,259	344,864,615,171	2,139,094	140,272,468	835,550,189	345,700,165,360
+2015-09-28	21,020,312,953	347,671,486,613	2,064,687	140,832,113	855,560,394	348,527,047,007
+2015-09-25	24,538,918,801	345,538,288,563	2,727,330	142,026,954	854,226,871	346,392,515,434
 2015-09-24	25,983,071,655	349,152,980,691	3,220,636	141,193,577	877,395,639	350,030,376,330
 2015-09-23	26,460,495,533	348,862,246,310	3,861,672	139,705,445	871,789,392	349,734,035,702
 2015-09-22	31,598,565,535	348,373,107,279	2,121,641	136,335,618	876,978,020	349,250,085,299
@@ -208,7 +215,10 @@ def test():
     y8 = []
 
     last_rongzi_balance = 0
-    for line in data.split('\n')[:10]:
+    for line in data.split('\n')[:30]:
+        if not line.strip():
+            continue
+
         date, rongzi_buy, rongzi_balance, rongquan_sell_liang, rongquan_balance_liang, rongquan_balance, rong_all_balance = line.split('\t')
 
         price = get_stock_history_by_date('399001.SZ', date)
@@ -245,7 +255,7 @@ def test():
     line_chart.title = 'rong'
     line_chart.x_labels = x
     line_chart.add('rongzi_buy', y1)
-    line_chart.add('rongzi_return', y8)
+    # line_chart.add('rongzi_return', y8)
     line_chart.add('rongzi_balance', data_standard(y2), secondary=True)
     # line_chart.add('rongquan_sell_liang', data_standard(y3))
     # line_chart.add('rongquan_balance_liang', data_standard(y4))
