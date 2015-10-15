@@ -133,7 +133,11 @@ class StockHandler(tornado.web.RequestHandler):
         for day in days:
             result.append(day)
 
-        self.render('stock.html', days=result)
+        name = self.application.stock.info.find_one({
+            'stock': stock
+        })['name']
+
+        self.render('stock.html', days=result, name=name)
 
 
 class Application(tornado.web.Application):
