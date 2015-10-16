@@ -29,7 +29,7 @@ yahoo的api是国际性的，是支持国内沪深股市的，但代码稍微变
 深市A股票买卖的代码是以000打头
 
 curl 'http://ichart.yahoo.com/table.csv?s=601211.SS&a=05&b=01&c=2015&d=06&e=24&f=2015&g=d'
-curl 'http://ichart.yahoo.com/table.csv?s=600318.SS&a=07&b=31&c=2015&d=07&e=31&f=2015&g=d'
+curl 'http://ichart.yahoo.com/table.csv?s=002311.SZ&a=08&b=01&c=2015&d=09&e=15&f=2015&g=d'
 
 '''
 
