@@ -174,5 +174,11 @@ def get_002():
 
 if __name__ == '__main__':
     # get_all_stock_many_day('2015-09-01', '2015-09-30')
-    get_many_day('002476.SZ', '2015-09-01', '2015-09-30')
+    # get_many_day('002476.SZ', '2015-09-01', '2015-09-30')
+
+    from util import get_all_stock
+
+    for stock in get_all_stock():
+        if stock.startswith('002'):
+            get_many_day(stock, '2015-08-08', '2015-09-27')
 
