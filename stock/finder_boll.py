@@ -42,7 +42,10 @@ if __name__ == '__main__':
             if 'dn' not in r7:
                 continue
 
-            if r7['up'] > r6['up'] > r5['up'] > r4['up'] > r3['up'] > r2['up'] > r1['up']:
-                if r7['mb'] > r6['mb'] > r5['mb'] > r4['mb'] > r3['mb'] > r2['mb'] > r1['mb']:
-                    if r7['dn'] > r6['dn'] > r5['dn'] > r4['dn'] > r3['dn'] > r2['dn'] > r1['dn']:
-                        print stock
+            try:
+                if r7['up'] > r6['up'] > r5['up'] > r4['up'] > r3['up'] > r2['up'] > r1['up']:
+                    if r7['mb'] > r6['mb'] > r5['mb'] > r4['mb'] > r3['mb'] > r2['mb'] > r1['mb']:
+                        if r7['dn'] > r6['dn'] > r5['dn'] > r4['dn'] > r3['dn'] > r2['dn'] > r1['dn']:
+                            print stock
+            except:
+                continue
