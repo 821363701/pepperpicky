@@ -19,6 +19,7 @@
                 <th>stock</th>
                 <th>date</th>
                 <th><div class="btn btn-info">_close</div></th>
+                <th>boll</th>
                 <th><div class="btn btn-info">volume</div></th>
                 <th><div class="btn btn-info">rongzi_buy</div></th>
                 <th><div class="btn btn-info">rong_all_balance</div></th>
@@ -29,6 +30,7 @@
                 <td class="stock">{{ day['stock'] }}</td>
                 <td class="date">{{ day['date'] }}</td>
                 <td class="_close">{{ day['close'] }}</td>
+                <td class="boll">{{ day.get('dn', '') }} / {{ day.get('mb', '') }} / {{ day.get('up', '') }}</td>
                 <td class="volume">{{ int(float(day.get('volume', 0))) }}</td>
                 <td class="rongzi_buy">{{ int(day.get('rongzi_buy', '0').replace(',', '')) }}</td>
                 <td class="rong_all_balance">{{ int(day.get('rong_all_balance', '0').replace(',', '')) }}</td>
