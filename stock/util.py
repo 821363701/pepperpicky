@@ -148,7 +148,7 @@ def boll(stock, days=20):
         if day['close'] != 0.0:
             result.append(day)
 
-    aviable = len(result) - days
+    aviable = len(result) - days + 1
     for i in range(aviable):
         ma = 0.0
         for d in result[i:i+days]:
@@ -166,9 +166,10 @@ def boll(stock, days=20):
 
         c.history.update({
             'stock': stock,
-            'date': result[i+days]['date']
+            'date': result[i+days-1]['date']
         }, {
             '$set': {
+                'ma': ma,
                 'mb': mb,
                 'up': up,
                 'dn': dn
@@ -177,4 +178,7 @@ def boll(stock, days=20):
 
 
 if __name__ == "__main__":
-    boll('000777.SZ', 20)
+    for stock in get_all_stock():
+        if stock.startswith('000') or stock.startswith('002'):
+            print stock
+            boll(stock)
