@@ -176,9 +176,23 @@ if __name__ == '__main__':
     # get_all_stock_many_day('2015-09-01', '2015-09-30')
     # get_many_day('002476.SZ', '2015-09-01', '2015-09-30')
 
-    from util import get_all_stock
+    from util import get_all_stock, c
 
     for stock in get_all_stock():
         if stock.startswith('002') or stock.startswith('000'):
-            get_many_day(stock, '2015-09-28', '2015-09-28')
+            d = c.history.find_one({
+                'date': '2015-09-28',
+                'stock': stock
+            })
+
+            volume = float(d['volume']) / d['close']
+
+            c.history.update({
+                'date': '2015-09-28',
+                'stock': stock
+            }, {
+                '$set': {
+                    'volume': volume,
+                }
+            })
 
