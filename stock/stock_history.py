@@ -179,6 +179,6 @@ if __name__ == '__main__':
     from util import get_all_stock
 
     for stock in get_all_stock():
-        if stock.startswith('002'):
-            get_many_day(stock, '2015-08-08', '2015-09-27')
+        if stock.startswith('002') or stock.startswith('000'):
+            get_many_day(stock, '2015-09-28', '2015-09-28')
 
