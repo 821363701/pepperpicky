@@ -23,12 +23,14 @@ for stock in get_all_stock():
         'date': date,
         'stock': stock
     }, {
-        'date': date,
-        'open': today,
-        'high': high,
-        'low': low,
-        'close': current,
-        'volume': volume,
-        'adj': current,
-        'stock': stock
+        '$set': {
+            'date': date,
+            'open': today,
+            'high': high,
+            'low': low,
+            'close': current,
+            'volume': volume,
+            'adj': current,
+            'stock': stock
+        }
     }, upsert=True)
