@@ -219,8 +219,52 @@ def boll_daily(stock, days=20):
         })
 
 
+def kdj(stock):
+    curser = c.history.find({
+        'stock': stock,
+        'date': {
+            '$gt': '2015-08-01'
+        }
+    }).sort('date')
+
+    result = []
+    for day in curser:
+        if day['close'] != 0.0:
+            result.append(day)
+
+    last_k = 50.0
+    last_d = 50.0
+    for r in result:
+        if r['high'] == r['low']:
+            continue
+
+        rsv = (r['close'] - r['low']) / (r['high'] - r['low']) * 100
+
+        k = 2/3*last_k + 1/3*rsv
+        d = 2/3*last_d + 1/3*k
+        j = 3*k - 2*d
+
+        c.history.update({
+            'stock': stock,
+            'date': r['date']
+        }, {
+            '$set': {
+                'rsv': rsv,
+                'k': k,
+                'd': d,
+                'j': j
+            }
+        })
+
+        last_k = k
+        last_d = d
+
+
 if __name__ == "__main__":
-    boll('000777.SZ')
+    kdj('000777.SZ')
+
+    # boll('000777.SZ')
+
     # for stock in get_all_stock():
     #     if stock.startswith('000') or stock.startswith('002'):
     #         print stock
