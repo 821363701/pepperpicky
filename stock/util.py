@@ -208,7 +208,7 @@ def boll_daily(stock, days=20):
 
         c.history.update({
             'stock': stock,
-            'date': result[i+days-1]['date']
+            'date': result[0]['date']
         }, {
             '$set': {
                 'ma': ma,
@@ -220,7 +220,7 @@ def boll_daily(stock, days=20):
 
 
 if __name__ == "__main__":
-    boll_daily('000777.SZ')
+    boll('000777.SZ')
     # for stock in get_all_stock():
     #     if stock.startswith('000') or stock.startswith('002'):
     #         print stock
