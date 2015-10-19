@@ -1,11 +1,13 @@
 __author__ = 'yu'
 
 from pymongo import MongoClient
-from util import get_all_stock, get_stock_price, rate, get_stock_history_by_date, calc_s_line
+from util import get_all_stock, get_stock_price, boll_daily
 
 c = MongoClient('121.199.5.143').stock
 
 for stock in get_all_stock():
+    print stock
+
     price = get_stock_price(stock)
 
     # today, yesterday, current, high, low
@@ -18,7 +20,6 @@ for stock in get_all_stock():
     date = price[30]
     volume = price[8]
 
-    print stock
     c.history.update({
         'date': date,
         'stock': stock
@@ -34,3 +35,6 @@ for stock in get_all_stock():
             'stock': stock
         }
     }, upsert=True)
+
+    # calc boll 20
+    boll_daily(stock)

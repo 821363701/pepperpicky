@@ -2,7 +2,7 @@ __author__ = 'yuxizhou'
 
 import requests
 import math
-from pymongo import MongoClient
+from pymongo import MongoClient, DESCENDING
 from datetime import datetime
 
 sina_api = 'http://hq.sinajs.cn/etag.php?_=0.9219840362202376&list={}'
@@ -177,9 +177,51 @@ def boll(stock, days=20):
         })
 
 
+def boll_daily(stock, days=20):
+    curser = c.history.find({
+        'stock': stock,
+        'close': {
+            '$ne': 0.0
+        }
+    }).sort('date', DESCENDING)
+
+    result = []
+    for day in curser.limit(20):
+        if day['close'] != 0.0:
+            result.append(day)
+
+    aviable = len(result) - days + 1
+    for i in range(aviable):
+        ma = 0.0
+        for d in result[i:i+days]:
+            ma += d['close']
+        ma /= days
+
+        md = 0.0
+        for d in result[i:i+days]:
+            md += pow(d['close'] - ma, 2)
+        md = math.sqrt(md/days)
+
+        mb = ma
+        up = mb + 2 * md
+        dn = mb - 2 * md
+
+        c.history.update({
+            'stock': stock,
+            'date': result[i+days-1]['date']
+        }, {
+            '$set': {
+                'ma': ma,
+                'mb': mb,
+                'up': up,
+                'dn': dn
+            }
+        })
+
+
 if __name__ == "__main__":
-    # boll('002686.SZ')
-    for stock in get_all_stock():
-        if stock.startswith('000') or stock.startswith('002'):
-            print stock
-            boll(stock)
+    boll_daily('000777.SZ')
+    # for stock in get_all_stock():
+    #     if stock.startswith('000') or stock.startswith('002'):
+    #         print stock
+    #         boll(stock)
