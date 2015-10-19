@@ -178,8 +178,8 @@ def boll(stock, days=20):
 
 
 if __name__ == "__main__":
-    boll('002686.SZ')
-    # for stock in get_all_stock():
-    #     if stock.startswith('000') or stock.startswith('002'):
-    #         print stock
-    #         boll(stock)
+    # boll('002686.SZ')
+    for stock in get_all_stock():
+        if stock.startswith('000') or stock.startswith('002'):
+            print stock
+            boll(stock)
