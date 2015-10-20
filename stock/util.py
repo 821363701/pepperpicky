@@ -240,9 +240,9 @@ def kdj(stock):
 
         rsv = (r['close'] - r['low']) / (r['high'] - r['low']) * 100
 
-        k = 2/3*last_k + 1/3*rsv
-        d = 2/3*last_d + 1/3*k
-        j = 3*k - 2*d
+        k = 2.0/3.0*last_k + 1.0/3.0*rsv
+        d = 2.0/3.0*last_d + 1.0/3.0*k
+        j = 3.0*k - 2.0*d
 
         c.history.update({
             'stock': stock,
@@ -261,7 +261,12 @@ def kdj(stock):
 
 
 if __name__ == "__main__":
-    kdj('000777.SZ')
+    # kdj('000777.SZ')
+
+    for stock in get_all_stock():
+        if stock.startswith('000') or stock.startswith('002'):
+            print stock
+            kdj(stock)
 
     # boll('000777.SZ')
 
