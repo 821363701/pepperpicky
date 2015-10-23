@@ -39,7 +39,6 @@ def get_cares(node_id):
         max_page = result['maxPage']
         for user in result['users']:
             care.append(user['id'])
-        print len(care)
         page += 1
         r.close()
         # time.sleep(1)
@@ -54,6 +53,7 @@ def do_job(job):
         'xueqiu_id': job
     })
     cares = get_cares(job)
+    print '{} {}'.format(job, len(cares))
     for care in cares:
         c.relation.insert({
             'from': job,
