@@ -20,7 +20,7 @@
                 <th>date</th>
                 <th><div class="btn btn-info">_close</div></th>
                 <th>boll</th>
-                <th>kdj</th>
+{#                <th>kdj</th>#}
                 <th><div class="btn btn-info">volume</div></th>
                 <th><div class="btn btn-info">rongzi_buy</div></th>
                 <th><div class="btn btn-info">rong_all_balance</div></th>
@@ -34,7 +34,7 @@
                 <td class="date">{{ day['date'] }}</td>
                 <td class="_close">{{ day['close'] }}</td>
                 <td class="boll">{{ str(day.get('dn', ''))[:6] }} / {{ str(day.get('mb', ''))[:6] }} / {{ str(day.get('up', ''))[:6] }}</td>
-                <td class="boll">{{ str(day.get('k', ''))[:6] }} / {{ str(day.get('d', ''))[:6] }} / {{ str(day.get('j', ''))[:6] }}</td>
+{#                <td class="kdj">{{ str(day.get('k', ''))[:6] }} / {{ str(day.get('d', ''))[:6] }} / {{ str(day.get('j', ''))[:6] }}</td>#}
                 <td class="volume">{{ int(float(day.get('volume', 0))) }}</td>
                 <td class="rongzi_buy">{{ int(day.get('rongzi_buy', '0').replace(',', '')) }}</td>
                 <td class="rong_all_balance">{{ int(day.get('rong_all_balance', '0').replace(',', '')) }}</td>
