@@ -64,7 +64,7 @@ def do_job(job):
             'xueqiu_id': care
         })
         if not one:
-            jobs.append(one)
+            jobs.append(care)
 
 
 try:
