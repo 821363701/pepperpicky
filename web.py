@@ -130,7 +130,23 @@ class StockHandler(tornado.web.RequestHandler):
         }).sort('date')
 
         result = []
+        last_price = 0.0
+        last_rong = 0.0
         for day in days:
+            if last_price == 0.0:
+                day['price_percent'] = '0.0%'
+            else:
+                day['price_percent'] = str((day['close'] - last_price) / last_price * 100.0)[:4]
+            last_price = day['close']
+            print last_price
+
+            if last_rong == 0.0:
+                day['rong_percent'] = '0.0%'
+            else:
+                day['rong_percent'] = str((int(day.get('rong_all_balance', '0').replace(',', ''))*1.0 - last_rong) / last_rong * 100.0)[:4]
+            last_rong = int(day.get('rong_all_balance', '0').replace(',', ''))
+            print last_rong
+
             result.append(day)
 
         name = self.application.stock.info.find_one({

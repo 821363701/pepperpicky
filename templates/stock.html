@@ -24,6 +24,8 @@
                 <th><div class="btn btn-info">volume</div></th>
                 <th><div class="btn btn-info">rongzi_buy</div></th>
                 <th><div class="btn btn-info">rong_all_balance</div></th>
+                <th>price%</th>
+                <th>rong%</th>
             </tr>
         {% for day in days[-60:] %}
             {% if day['volume'] != 0 %}
@@ -36,6 +38,8 @@
                 <td class="volume">{{ int(float(day.get('volume', 0))) }}</td>
                 <td class="rongzi_buy">{{ int(day.get('rongzi_buy', '0').replace(',', '')) }}</td>
                 <td class="rong_all_balance">{{ int(day.get('rong_all_balance', '0').replace(',', '')) }}</td>
+                <td>{{ day['price_percent'] }}</td>
+                <td>{{ day['rong_percent'] }}</td>
             </tr>
             {% end %}
         {% end %}

@@ -54,8 +54,8 @@ def save_rong_for_days_before(stock, day_before):
             to_db(stock, date, result)
 
 if __name__ == '__main__':
-    for stock in get_all_stock():
-        if stock.startswith('000') or stock.startswith('002'):
-            save_rong_for_days_before(stock, 6)
+    # for stock in get_all_stock():
+    #     if stock.startswith('000') or stock.startswith('002'):
+    #         save_rong_for_days_before(stock, 6)
 
-    # save_rong_for_days_before('002476.SZ', 100)
+    save_rong_for_days_before('002093.SZ', 100)
