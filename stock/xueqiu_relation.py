@@ -2,6 +2,7 @@ __author__ = 'yuxizhou'
 
 import requests
 import json
+import time
 from pymongo import MongoClient
 
 c = MongoClient('121.199.5.143').xueqiu
@@ -54,7 +55,7 @@ def get_cares(node_id):
             care.append(user['id'])
         page += 1
         r.close()
-        # time.sleep(1)
+        time.sleep(0.2)
     return care
 
 
