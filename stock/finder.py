@@ -53,6 +53,9 @@ def count_avg_s_line():
 
 def find_sline():
     for stock in stocks:
+        if not stock.startswith('002'):
+            continue
+
         days = get_stock_days(stock)
 
         if days.count() < 10:
@@ -63,29 +66,32 @@ def find_sline():
         now = None
 
         for day in days:
-            if (not high) or (high['high'] < day['high']):
+            if day['close'] == 0.0:
+                continue
+
+            if (not high) or (high['close'] < day['close']):
                 high = day
 
-            if (not low) or (low['low'] > day['low']):
+            if (not low) or (low['close'] > day['close']):
                 low = day
 
-            if day['date'] == "2015-07-24":
+            if day['date'] == "2015-11-06":
                 now = day
 
         if high and low and now:
-            high_rate = (high['high'] - now['close']) / now['close'] * 100
-            low_rate = (now['close'] - low['low']) / low['low'] * 100
+            name = get_stock_name_from_mongo(stock)
+            print u'{}\t{}\t{}\t{}\t{}'.format(high['close'], low['close'], now['close'], stock, name)
 
-            s_line = low['low'] + (high['high'] - low['low']) / 8
-
-            if now['close'] < s_line:
-                if is_stop_now(stock):
-                    continue
-
-                name = get_stock_name_from_mongo(stock)
-                print u"{} {} {}".format(s_line, stock, name)
+            # high_rate = (high['close'] - now['close']) / now['close'] * 100
+            # low_rate = (now['close'] - low['close']) / low['close'] * 100
+            #
+            # s_line = low['close'] + (high['close'] - low['close']) / 8
+            #
+            # if now['close'] < s_line:
+            #     name = get_stock_name_from_mongo(stock)
+            #     print u"{} {} {}".format(s_line, stock, name)
         else:
-            print "error {}".format(stock)
+            pass
 
 
 def find_rate():
@@ -110,9 +116,12 @@ def find_rate():
 def find_last_week_up_most():
     rank = []
     for stock in stocks:
+        if not stock.startswith('002'):
+            continue
+
         try:
             first_open = get_stock_history_by_date(stock, '2015-09-30')['close']
-            last_close = get_stock_history_by_date(stock, '2015-10-16')['close']
+            last_close = get_stock_history_by_date(stock, '2015-11-06')['close']
 
             r = rate(last_close, first_open)
             rank.append((stock, r))
